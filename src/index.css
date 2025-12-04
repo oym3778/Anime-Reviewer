@@ -1,68 +1,55 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+html {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  background-color: darkgrey;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+@layer components {
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+  /* input / label taken from https://uiverse.io/Maximinodotpy/thin-sheep-13 */
+  .input {
+    font-size: 100%;
+    padding: 0.8em;
+    outline: none;
+    border: 2px solid rgb(200, 200, 200);
+    border-radius: 20px;
+    width: 100%;
   }
-  a:hover {
-    color: #747bff;
+
+  .label {
+    font-size: 100%;
+    left: 0;
+    padding: 0.8em;
+    margin-left: 0.5em;
+    transition: all 0.3s ease;
   }
-  button {
-    background-color: #f9f9f9;
+
+  /* https://uiverse.io/sahilxkhadka/rotten-grasshopper-44 */
+  .button {
+    /* Two ways of creating css, with tailwind and @apply or 
+        just writing it directly in css */
+    /* cursor: pointer;
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.8);
+    color: #f1f1f1;
+    border-radius: 1.5rem;
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease; */
+    @apply cursor-pointer gap-1.5 px-8 py-4 bg-black text-[#f1f1f1] rounded-3xl transition font-semibold shadow-md
+  }
+
+  button:hover {
+    background-color: #2d2d2d;
   }
 }

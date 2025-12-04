@@ -1,5 +1,3 @@
-import "./App.css";
-
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { Login } from "./Pages/Login";
 import { SignUp } from "./Pages/SignUp";
