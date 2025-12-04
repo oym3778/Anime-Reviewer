@@ -1,36 +1,116 @@
-# React + Vite
+# 🎌 Anime Review Hub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal **anime review and comparison platform** — currently in development.
 
-Currently, two official plugins are available:
+**Anime Review Hub** is a React-based project where users can search for anime, add them to a personal watch list, and write reviews to capture how each show made them feel.  
+The goal is to create a fun, personalized space for tracking your anime journey and discovering new shows through friends and shared preferences.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project is actively being built as part of my portfolio, with new features added weekly.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚧 Current Status — In Development
 
-## Expanding the ESLint configuration
+Core functionality currently being built:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 🔍 **Anime Search** using AniList’s GraphQL API
+- 📚 **Watch List** for ongoing and completed shows
+- 📝 **Custom Reviews** with structured questions (favorite character, moments, themes, etc.)
+- 🎨 **Frontend** using React + Vite + Tailwind for a responsive UI
+- 🧹 **Developer Tools** with ESLint + Prettier
 
-watch to learn ESLint: https://www.youtube.com/watch?v=eieTlMwCwWU
+---
 
-https://studio.apollographql.com/sandbox/explorer
+## ✨ Planned Features
 
-query ($search: String!) {
-Page {
-media(search: $search, type: ANIME) {
-id
-title {
-romaji
-english
-native
-}
-coverImage {
-extraLarge
-}
-}
-}
-}
+### 🔥 AI-Powered Review Insights
+
+Using Google’s free AI API to generate:
+
+- Review summaries
+- Personality-style breakdowns
+- Recommendation insights
+- Compatibility scores
+- Theme and writing-style analysis
+- Comparative opinions between friends
+
+### 👥 Friend System
+
+A social layer where users can:
+
+- Add friends
+- View their reviews
+- Compare tastes and preferences
+- Discover new shows through similarities or differences
+
+### ☁️ Firebase Integration
+
+Planned for storing:
+
+- Watch lists
+- Reviews
+- Friend connections
+- Settings and personalization
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+- React
+- Vite
+- Tailwind CSS
+
+### APIs & Data
+
+- AniList GraphQL
+- Google AI API
+
+### Backend / Storage (Planned)
+
+- Firebase Authentication
+- Firebase Firestore
+
+### Developer Tools
+
+- ESLint
+- Prettier
+
+---
+
+## 📌 Why This Project?
+
+This project brings together:
+
+- My interest in anime
+- My experience with React and front-end development
+- My desire to learn and use GraphQL
+- My curiosity about integrating AI into a real app
+- My goal of creating a deeper portfolio piece
+
+Anime Review Hub is helping me learn full application design — from API interactions to UI layouts, and eventually authentication and cloud storage.
+
+---
+
+## 📅 Project Roadmap
+
+### Phase 1 — MVP (In Progress)
+
+- Anime search
+- Watch list UI
+- Basic review creation
+- Inline review display
+
+### Phase 2 — Social / AI
+
+- Friend system
+- AI review summaries
+- Comparison dashboard
+
+### Phase 3 — Polishing
+
+- Responsive redesign
+- Micro-animations & transitions
+- Onboarding improvements
+- Dark mode

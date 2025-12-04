@@ -1,0 +1,19 @@
+watch to learn ESLint: https://www.youtube.com/watch?v=eieTlMwCwWU
+
+https://studio.apollographql.com/sandbox/explorer
+
+query ($search: String!) {
+Page {
+media(search: $search, type: ANIME) {
+id
+title {
+romaji
+english
+native
+}
+coverImage {
+extraLarge
+}
+}
+}
+}
