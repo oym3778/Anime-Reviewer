@@ -1,17 +1,5 @@
 @import "tailwindcss";
 
-html {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-}
-
-body {
-  background-color: darkgrey;
-}
-
 @layer components {
 
   /* input / label taken from https://uiverse.io/Maximinodotpy/thin-sheep-13 */

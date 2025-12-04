@@ -7,7 +7,7 @@ export function MyReviews() {
         <li className="bg-purple-500 rounded-xl shadow-lg p-6 flex gap-6">
           <img
             className="w-[120px] h-[180px] object-cover rounded"
-            src="https://placehold.co/200x300"
+            src="https://placehold.co/120x180"
             alt=""
           />
           <div>
@@ -23,7 +23,7 @@ export function MyReviews() {
         <li className="bg-purple-500 rounded-xl shadow-lg p-6 flex gap-6">
           <img
             className="w-[120px] h-[180px] object-cover rounded"
-            src="https://placehold.co/200x300"
+            src="https://placehold.co/120x180"
             alt=""
           />
           <div>
@@ -39,7 +39,7 @@ export function MyReviews() {
         <li className="bg-purple-500 rounded-xl shadow-lg p-6 flex gap-6">
           <img
             className="w-[120px] h-[180px] object-cover rounded"
-            src="https://placehold.co/200x300"
+            src="https://placehold.co/120x180"
             alt=""
           />
           <div>
@@ -55,7 +55,7 @@ export function MyReviews() {
         <li className="bg-purple-500 rounded-xl shadow-lg p-6 flex gap-6">
           <img
             className="w-[120px] h-[180px] object-cover rounded"
-            src="https://placehold.co/200x300"
+            src="https://placehold.co/120x180"
             alt=""
           />
           <div>
