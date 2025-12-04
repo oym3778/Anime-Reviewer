@@ -1,11 +1,11 @@
 export function SignUp() {
   return (
     <>
-      <div className="flex flex-col justify-center items-center w-screen h-screen bg-cyan-500">
+      <div className="flex flex-col justify-center items-center w-screen h-screen bg-lime-700">
         <h1 className="text-5xl">Revo</h1>
         {/* TODO Might chance this from a form to not be... We arent sending this data anywhere yet */}
         <form
-          className="flex flex-col justify-center items-center bg-blue-500 size-150"
+          className="flex flex-col w-[80%] max-w-150 justify-center items-center bg-lime-500 size-150"
           action=""
         >
           <label className="label" htmlFor="username">

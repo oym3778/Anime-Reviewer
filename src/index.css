@@ -29,10 +29,9 @@ body {
     left: 0;
     padding: 0.8em;
     margin-left: 0.5em;
-    transition: all 0.3s ease;
   }
 
-  /* https://uiverse.io/sahilxkhadka/rotten-grasshopper-44 */
+  /* button from https://uiverse.io/sahilxkhadka/rotten-grasshopper-44 */
   .button {
     /* Two ways of creating css, with tailwind and @apply or 
         just writing it directly in css */
@@ -52,4 +51,14 @@ body {
   button:hover {
     background-color: #2d2d2d;
   }
+}
+
+/*TODO will need to incorporate this dynamically within tailwind */
+li{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 250px;
+  height: 350px;
 }
