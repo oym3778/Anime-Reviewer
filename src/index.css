@@ -15,7 +15,7 @@ body {
 @layer components {
 
   /* input / label taken from https://uiverse.io/Maximinodotpy/thin-sheep-13 */
-  .input {
+  /* .input {
     font-size: 100%;
     padding: 0.8em;
     outline: none;
@@ -29,7 +29,7 @@ body {
     left: 0;
     padding: 0.8em;
     margin-left: 0.5em;
-  }
+  } */
 
   /* button from https://uiverse.io/sahilxkhadka/rotten-grasshopper-44 */
   .button {
@@ -45,20 +45,12 @@ body {
     font-weight: 600;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease; */
-    @apply cursor-pointer gap-1.5 px-8 py-4 bg-black text-[#f1f1f1] rounded-3xl transition font-semibold shadow-md
+    /* @apply cursor-pointer gap-1.5 px-8 py-4 bg-black text-[#f1f1f1] rounded-3xl transition font-semibold shadow-md */
   }
 
-  button:hover {
+  /* button:hover {
     background-color: #2d2d2d;
-  }
+  } */
 }
 
 /*TODO will need to incorporate this dynamically within tailwind */
-li{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 250px;
-  height: 350px;
-}

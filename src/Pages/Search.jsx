@@ -1,94 +1,45 @@
 export function Search() {
+  const animes = [
+    "Jujutsu Kaisen",
+    "One Piece",
+    "Attack on Titan",
+    "My Hero Academia",
+    "Demon Slayer",
+    "Naruto",
+    "Fullmetal Alchemist: Brotherhood",
+    "One Punch Man",
+    "Hunter x Hunter",
+    "Death Note",
+  ];
+
   return (
-    <>
-      <div className="flex flex-col justify-center items-center bg-orange-700 min-h-screen h-auto">
-        <label className="label mt-70 w-80 bg-orange-500" htmlFor="search">
-          Search
-          <input className="input" type="text" input="search" />
-        </label>
-        <div
-          className="bg-orange-500 mx-10 mb-10 p-10 h-full"
-          id="search-result"
-        >
-          <ul className="flex flex-wrap justify-center items-center">
-            <li>
-              <h1>Jujutsu Kaisen</h1>
+    <div className="flex flex-col items-center bg-orange-700 min-h-screen py-20">
+      <label className="flex flex-col w-full max-w-[500px] text-white font-semibold mb-10">
+        Search
+        <input
+          className="mt-2 p-3 rounded-lg bg-white text-black shadow-md"
+          type="text"
+          id="search"
+        />
+      </label>
+
+      <div
+        id="search-result"
+        className="bg-orange-500 max-w-[1200px] p-10 rounded-xl shadow-xl"
+      >
+        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+          {animes.map((name) => (
+            <li key={name} className="flex flex-col items-center text-center">
+              <h1 className="text-white font-bold mb-2 text-lg">{name}</h1>
               <img
+                className="rounded-lg shadow-md hover:scale-105 transition"
                 src="https://placehold.co/200x300"
-                alt="Jujutsu Kaisen poster"
+                alt={`${name} poster`}
               />
             </li>
-            <li>
-              <h1>One Piece</h1>
-              <img src="https://placehold.co/200x300" alt="One Piece poster" />
-            </li>
-            <li>
-              <h1>Attack on Titan</h1>
-              <img
-                src="https://placehold.co/200x300"
-                alt="Attack on Titan poster"
-              />
-            </li>
-            <li>
-              <h1>Jujutsu Kaisen</h1>
-              <img
-                src="https://placehold.co/200x300"
-                alt="Jujutsu Kaisen poster"
-              />
-            </li>
-            <li>
-              <h1>Jujutsu Kaisen</h1>
-              <img
-                src="https://placehold.co/200x300"
-                alt="Jujutsu Kaisen poster"
-              />
-            </li>
-            <li>
-              <h1>My Hero Academia</h1>
-              <img
-                src="https://placehold.co/200x300"
-                alt="My Hero Academia poster"
-              />
-            </li>
-            <li>
-              <h1>Demon Slayer</h1>
-              <img
-                src="https://placehold.co/200x300"
-                alt="Demon Slayer poster"
-              />
-            </li>
-            <li>
-              <h1>Naruto</h1>
-              <img src="https://placehold.co/200x300" alt="Naruto poster" />
-            </li>
-            <li>
-              <h1>Fullmetal Alchemist: Brotherhood</h1>
-              <img
-                src="https://placehold.co/200x300"
-                alt="Fullmetal Alchemist: Brotherhood poster"
-              />
-            </li>
-            <li>
-              <h1>One Punch Man</h1>
-              <img
-                src="https://placehold.co/200x300"
-                alt="One-Punch Man poster"
-              />
-            </li>
-            <li>
-              <h1>Hunter x Hunter</h1>
-              <img
-                src="https://placehold.co/200x300"
-                alt="Hunter x Hunter poster"
-              />
-            </li>
-            <li>
-              <h1>Death Note</h1>
-              <img src="https://placehold.co/200x300" alt="Death Note poster" />
-            </li>
-          </ul>
-        </div>
+          ))}
+        </ul>
       </div>
-    </>
+    </div>
   );
 }
