@@ -5,6 +5,7 @@ import { Friends } from "./Pages/Friends";
 import { MyReviews } from "./Pages/MyReviews";
 import { Search } from "./Pages/Search";
 import { Review } from "./Pages/Review";
+import { Profile } from "./Pages/Profile";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/MyReviews" element={<MyReviews />} />
         <Route path="/Review" element={<Review />} />
         <Route path="/Search" element={<Search />} />
+        <Route path="/Profile" element={<Profile />} />
       </Routes>
     </HashRouter>
   );

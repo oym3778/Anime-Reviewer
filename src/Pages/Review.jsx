@@ -26,9 +26,17 @@ export function Review() {
           placeholder="Write something..."
         ></textarea>
 
-        <button className="button w-full py-3 bg-white text-pink-700 font-bold rounded-xl shadow-md hover:bg-white/50 hover:cursor-pointer transition">
-          Submit
-        </button>
+        <div className="flex flex-row gap-6">
+          <button className="button w-[50%] py-3 bg-white text-pink-700 font-bold rounded-xl shadow-md hover:bg-white/50 hover:cursor-pointer transition">
+            Submit
+          </button>
+          <button
+            disabled
+            className="button w-[50%] py-3 bg-white text-pink-700 font-bold rounded-xl shadow-md hover:bg-white/50 hover:cursor-pointer transition"
+          >
+            Back
+          </button>
+        </div>
       </form>
     </div>
   );
