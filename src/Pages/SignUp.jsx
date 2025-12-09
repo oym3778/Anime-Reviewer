@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+import { Navbar } from "../Components/Navbar";
 export function SignUp() {
   return (
     <>
@@ -62,16 +64,17 @@ export function SignUp() {
           </button>
         </form>
 
-        <button
+        <Link
+          to="/"
           className="
-          mt-4 w-[90%] max-w-[400px] py-3 rounded-xl 
+          text-center mt-4 w-[90%] max-w-[400px] py-3 rounded-xl 
           bg-black/40 text-white font-semibold 
           hover:bg-black/50 transition hover:cursor-pointer 
         "
           id="Sign-Up"
         >
           Login
-        </button>
+        </Link>
       </div>
     </>
   );

@@ -1,44 +1,5 @@
 @import "tailwindcss";
 
-@layer components {
-
-  /* input / label taken from https://uiverse.io/Maximinodotpy/thin-sheep-13 */
-  /* .input {
-    font-size: 100%;
-    padding: 0.8em;
-    outline: none;
-    border: 2px solid rgb(200, 200, 200);
-    border-radius: 20px;
-    width: 100%;
-  }
-
-  .label {
-    font-size: 100%;
-    left: 0;
-    padding: 0.8em;
-    margin-left: 0.5em;
-  } */
-
-  /* button from https://uiverse.io/sahilxkhadka/rotten-grasshopper-44 */
-  .button {
-    /* Two ways of creating css, with tailwind and @apply or 
-        just writing it directly in css */
-    /* cursor: pointer;
-    display: flex;
-    gap: 1.5rem;
-    padding: 1rem 2rem;
-    background: rgba(0, 0, 0, 0.8);
-    color: #f1f1f1;
-    border-radius: 1.5rem;
-    font-weight: 600;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease; */
-    /* @apply cursor-pointer gap-1.5 px-8 py-4 bg-black text-[#f1f1f1] rounded-3xl transition font-semibold shadow-md */
-  }
-
-  /* button:hover {
-    background-color: #2d2d2d;
-  } */
+html{
+  background-color: black;
 }
-
-/*TODO will need to incorporate this dynamically within tailwind */

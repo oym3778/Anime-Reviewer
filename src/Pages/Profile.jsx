@@ -1,10 +1,10 @@
 export function Profile() {
   return (
     <>
-      <div className="flex flex-col justify-center items-center w-screen h-screen bg-green-700">
+      <div className="flex flex-col justify-center items-center w-auto h-screen bg-green-700">
         <div className="flex flex-row justify-around items-center w-[80%] h-[60%] bg-green-500 rounded-2xl shadow-xl">
           <img
-            className="border-6 border-green-700 rounded-[100%] object-cover w-[350px] h-[350px]"
+            className="border-6 border-green-700 rounded-[100%] object-cover w-[350px] h-[350px] hover:cursor-pointer "
             src="https://i.pinimg.com/736x/3d/0e/d3/3d0ed37c45061192214c2e8291e06384.jpg"
             alt="pfp"
           />

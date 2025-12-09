@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
+
 export function Login() {
   return (
     <div className="flex flex-col justify-center items-center w-screen h-screen bg-blue-700">
       <h1 className="text-5xl font-bold text-white mb-10">Revo</h1>
-
       <form
         className="
           bg-white/20 backdrop-blur 
@@ -48,17 +49,17 @@ export function Login() {
           Login
         </button>
       </form>
-
-      <button
+      <Link
+        to="/SignUp"
         className="
-          mt-4 w-[90%] max-w-[400px] py-3 rounded-xl 
+          text-center mt-4 w-[90%] max-w-[400px] py-3 rounded-xl 
           bg-black/40 text-white font-semibold 
           hover:bg-black/50 transition hover:cursor-pointer 
         "
         id="Sign-Up"
       >
         Sign-Up
-      </button>
+      </Link>
     </div>
   );
 }
