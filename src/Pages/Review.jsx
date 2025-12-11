@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export function Review() {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-pink-700 p-6">
@@ -30,12 +32,13 @@ export function Review() {
           <button className="button w-[50%] py-3 bg-white text-pink-700 font-bold rounded-xl shadow-md hover:bg-white/50 hover:cursor-pointer transition">
             Submit
           </button>
-          <button
+          <Link
+            to="/Search"
             disabled
-            className="button w-[50%] py-3 bg-white text-pink-700 font-bold rounded-xl shadow-md hover:bg-white/50 hover:cursor-pointer transition"
+            className="text-center button w-[50%] py-3 bg-white text-pink-700 font-bold rounded-xl shadow-md hover:bg-white/50 hover:cursor-pointer transition"
           >
             Back
-          </button>
+          </Link>
         </div>
       </form>
     </div>
