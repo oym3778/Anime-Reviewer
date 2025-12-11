@@ -1,17 +1,25 @@
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export function Review() {
+  const location = useLocation();
+  const { anime } = location.state;
+  const titleEng = anime.title.english;
+  const titleRomaji = anime.title.romaji;
+  const coverImg = anime.coverImage.extraLarge;
+  const displayTitle = titleEng || titleRomaji;
+
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-pink-700 p-6">
       {/* Header Section */}
       <div className="flex flex-col justify-center items-center mb-12">
         <img
           className="rounded-xl shadow-lg w-[250px] md:w-[300px]"
-          src="https://placehold.co/300x400"
-          alt="Jujutsu Kaisen poster"
+          src={coverImg}
+          alt={`${displayTitle} poster`}
         />
         <h1 className="text-5xl mt-6 font-bold tracking-wide text-white">
-          Jujutsu Kaisen
+          {displayTitle}
         </h1>
       </div>
 

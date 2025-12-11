@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { SearchBar } from "../Components/SearchBar";
 import { Spinner } from "../Components/Spinner";
 import { AnimeCard } from "../Components/AnimeCard";
 import { useDebounce } from "react-use";
+
+/* keys used in sessionStorage */
+const STORAGE_KEY_TERM = "search_term";
+const STORAGE_KEY_RESULTS = "search_results";
 
 export function Search() {
   // TODO input sounds broad, maybe searchTerm and setSearchTerm.
@@ -10,15 +14,59 @@ export function Search() {
   // TODO figure out how to keep the input persitent among routes, i dont
   //    want to retype a search term if i just wanted to see my reviews
   const [input, setInput] = useState("");
+  const [debouncedInput, setDebouncedInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [animeList, setAnimeList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(""); // TODO go through and make these user friendly, while mainting dev errors
-  const [debouncedInput, setDebouncedInput] = useState("");
+
+  // Similar to useState hook except it will not re-mouunt the page on change
+  // Prevent the first fetch after restoring cached results from sessionStorage.
+  const skipNextFetchRef = useRef(false);
+  // Ensure sessionStorage restoration runs only once on initial mount.
+  const restoredRef = useRef(false);
 
   useDebounce(() => setDebouncedInput(input), 500, [input]);
 
+  // Restore from sessionStorage on mount (if available)
   useEffect(() => {
+    try {
+      const savedTerm = sessionStorage.getItem(STORAGE_KEY_TERM);
+      const savedResults = sessionStorage.getItem(STORAGE_KEY_RESULTS);
+
+      if (savedTerm && savedResults) {
+        setInput(savedTerm);
+        setAnimeList(JSON.parse(savedResults));
+        // we restored state that matches `input`, so skip the immediate fetch
+        skipNextFetchRef.current = true;
+        restoredRef.current = true;
+      }
+    } catch (err) {
+      console.warn("Failed to read search state from sessionStorage", err);
+    }
+  }, []); // run once on mount
+
+  // Persist to sessionStorage whenever input or animeList changes
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(STORAGE_KEY_TERM, input);
+      sessionStorage.setItem(STORAGE_KEY_RESULTS, JSON.stringify(animeList));
+    } catch (err) {
+      console.warn("Failed to write search state to sessionStorage", err);
+    }
+  }, [input, animeList]);
+
+  useEffect(() => {
+    if (skipNextFetchRef.current) {
+      // we have restored matching animeList for this input — don't refetch now
+      skipNextFetchRef.current = false;
+      return;
+    }
+    if (restoredRef.current) {
+      restoredRef.current = false;
+      return;
+    }
+
     const fetchAnime = async (searchTerm = "") => {
       if (searchTerm.trim() === "") {
         setAnimeList([]);
