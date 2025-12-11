@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export function Navbar() {
   return (
     <nav
-      className="w-full top-0 left-0 fixed px-8 py-4 bg-black/40 text-white backdrop-blur-md 
+      className="z-1 w-full top-0 left-0 fixed px-8 py-4 bg-black/40 text-white backdrop-blur-md 
                     flex items-center justify-between shadow-lg"
     >
       {/* Logo */}

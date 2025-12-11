@@ -7,6 +7,8 @@ import { useDebounce } from "react-use";
 export function Search() {
   // TODO input sounds broad, maybe searchTerm and setSearchTerm.
   // Be carful, the fetchAnime() uses that var aswell
+  // TODO figure out how to keep the input persitent among routes, i dont
+  //    want to retype a search term if i just wanted to see my reviews
   const [input, setInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [animeList, setAnimeList] = useState([]);
@@ -107,7 +109,7 @@ export function Search() {
         // TODO Lags when stretching or shrinking... figure out why
         className="bg-orange-500 w-[80%] max-w-[1200px] min-w-[475px] p-10 rounded-xl shadow-xl"
       >
-        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+        <ul className="grid gap-5 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           {/* TODO come back and re think logic, just seems a bit much. */}
           {animeList.length === 0 && !errorMsg ? (
             <li className="col-span-full text-center">
