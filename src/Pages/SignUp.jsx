@@ -27,6 +27,18 @@ export function SignUp() {
               id="username"
             />
           </label>
+          <label
+            className="flex flex-col text-white font-medium"
+            htmlFor="username"
+          >
+            Email
+            <input
+              required
+              className="mt-1 p-2 rounded-md bg-white text-black"
+              type="text"
+              id="username"
+            />
+          </label>
 
           <label
             className="flex flex-col text-white font-medium"

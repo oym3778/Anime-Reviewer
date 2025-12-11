@@ -1,7 +1,8 @@
 watch to learn ESLint: https://www.youtube.com/watch?v=eieTlMwCwWU
 this video helped to learn react https://www.youtube.com/watch?v=dCLhUialKPQ&t=1190s
 https://studio.apollographql.com/sandbox/explorer
-
+Watch this video for firebase tutorial https://www.youtube.com/watch?v=LCvBPsuHe6g
+Read to refresh on env variables with Vite https://dev.to/ebereplenty/how-to-use-environment-variables-in-a-reactjs-app-with-vite-3lh0
 query ($search: String!) {
 Page {
 media(search: $search, type: ANIME) {
