@@ -1,5 +1,5 @@
 watch to learn ESLint: https://www.youtube.com/watch?v=eieTlMwCwWU
-
+this video helped to learn react https://www.youtube.com/watch?v=dCLhUialKPQ&t=1190s
 https://studio.apollographql.com/sandbox/explorer
 
 query ($search: String!) {

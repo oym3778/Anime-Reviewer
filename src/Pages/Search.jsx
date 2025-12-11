@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { SearchBar } from "../Components/SearchBar";
 import { Spinner } from "../Components/Spinner";
 import { AnimeCard } from "../Components/AnimeCard";
+import { useDebounce } from "react-use";
 
 export function Search() {
   // TODO input sounds broad, maybe searchTerm and setSearchTerm.
@@ -11,6 +12,9 @@ export function Search() {
   const [animeList, setAnimeList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(""); // TODO go through and make these user friendly, while mainting dev errors
+  const [debouncedInput, setDebouncedInput] = useState("");
+
+  useDebounce(() => setDebouncedInput(input), 500, [input]);
 
   useEffect(() => {
     const fetchAnime = async (searchTerm = "") => {
@@ -92,8 +96,8 @@ export function Search() {
       }
     };
 
-    fetchAnime(input);
-  }, [currentPage, input]);
+    fetchAnime(debouncedInput);
+  }, [currentPage, debouncedInput]);
 
   return (
     <div className="flex flex-col items-center bg-orange-700 min-h-screen py-20">
