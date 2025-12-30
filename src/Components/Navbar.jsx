@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export function Navbar() {
   return (
@@ -12,39 +12,55 @@ export function Navbar() {
       {/* Navigation Links */}
       <ol className="flex items-center gap-8 text-lg">
         <li>
-          <Link
+          <NavLink
             to="/Search"
-            className="hover:text-yellow-300 transition-colors duration-200"
+            className={({ isActive }) =>
+              `transition-colors duration-200 hover:text-yellow-300 ${
+                isActive ? "text-yellow-300" : ""
+              }`
+            }
           >
             Search
-          </Link>
+          </NavLink>
         </li>
 
         <li>
-          <Link
+          <NavLink
             to="/Friends"
-            className="hover:text-yellow-300 transition-colors duration-200"
+            className={({ isActive }) =>
+              `transition-colors duration-200 hover:text-yellow-300 ${
+                isActive ? "text-yellow-300" : ""
+              }`
+            }
           >
             Friends
-          </Link>
+          </NavLink>
         </li>
 
         <li>
-          <Link
+          <NavLink
             to="/MyReviews"
-            className="hover:text-yellow-300 transition-colors duration-200"
+            className={({ isActive }) =>
+              `transition-colors duration-200 hover:text-yellow-300 ${
+                isActive ? "text-yellow-300" : ""
+              }`
+            }
           >
             Reviews
-          </Link>
+          </NavLink>
         </li>
 
         <li>
-          <Link
+          <NavLink
             to="/Profile"
-            className="hover:text-yellow-300 transition-colors duration-200"
+            className={({ isActive }) =>
+              `transition-colors duration-200 hover:text-yellow-300 ${
+                isActive ? "text-yellow-300" : ""
+              }`
+            }
           >
             Profile
-          </Link>
+          </NavLink>
         </li>
       </ol>
     </nav>
