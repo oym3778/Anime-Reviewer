@@ -1,4 +1,19 @@
+import { auth } from "../config/firestore";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 export function Profile() {
+  const navigate = useNavigate();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    try {
+      signOut(auth);
+      console.log("Logout successful");
+      navigate("/Login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <div className="flex flex-col justify-center items-center w-auto h-screen bg-green-700">
@@ -22,6 +37,7 @@ export function Profile() {
           </div>
         </div>
         <button
+          onClick={handleLogout}
           className="bg-red-700
           mt-4 w-[90%] max-w-[400px] py-3 rounded-xl 
           text-white font-semibold 
