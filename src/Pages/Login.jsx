@@ -14,7 +14,6 @@ export function Login() {
       await signInWithEmailAndPassword(auth, email, password);
 
       console.log("Login successful");
-      navigate("/Search");
     } catch (error) {
       console.log(error);
     }
