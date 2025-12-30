@@ -21,7 +21,7 @@ export function SignUp() {
 
       if (user) {
         // TODO Potentially seperate doc and setDoc to make more readable
-        await setDoc(doc(db, "Users", email), {
+        await setDoc(doc(db, "Users", user.email), {
           Friends: [],
           Reviews: [
             {
@@ -29,13 +29,14 @@ export function SignUp() {
               Review: "",
             },
           ],
-          email: email,
+          bio: "",
+          email: user.email,
           username: username,
         });
 
         console.log("Account Created!");
         console.log(user);
-        navigate("/Search");
+        navigate("/Profile");
         //TODO if you want to add some sort of toast message react toasity has some pre-built popups you can use
       }
     } catch (error) {
