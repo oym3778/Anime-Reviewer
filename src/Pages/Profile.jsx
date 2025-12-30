@@ -1,7 +1,11 @@
-import { auth } from "../config/firestore";
+import { auth, db } from "../config/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { signOut } from "firebase/auth";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 export function Profile() {
+  const [userDetails, setUserDetails] = useState(null);
+
   const navigate = useNavigate();
 
   const handleLogout = (e) => {
@@ -14,6 +18,23 @@ export function Profile() {
       console.log(error);
     }
   };
+  const fetchUserData = async () => {
+    auth.onAuthStateChanged(async (user) => {
+      console.log(user.email);
+      const docRef = await doc(db, "Users", user.email);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists) {
+        setUserDetails(docSnap.data());
+      } else {
+        console.log("User is not logged in...");
+      }
+    });
+  };
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
   return (
     <>
       <div className="flex flex-col justify-center items-center w-auto h-screen bg-green-700">
@@ -27,7 +48,9 @@ export function Profile() {
             className="flex flex-col justify-center w-[50%] gap-6"
             id="summary"
           >
-            <h2 className="text-2xl font-bold">Gamertag</h2>
+            <h2 className="text-2xl font-bold">
+              {userDetails ? userDetails["username"] : "Username"}
+            </h2>
             <textarea
               placeholder="Your short bio will appear next to your avatar"
               name="bio"
