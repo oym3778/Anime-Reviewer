@@ -1,6 +1,24 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firestore";
 
 export function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+
+      console.log("Login successful");
+      navigate("/Search");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="flex flex-col justify-center items-center w-screen h-screen bg-blue-700">
       <h1 className="text-5xl font-bold text-white mb-10">Revo</h1>
@@ -12,17 +30,16 @@ export function Login() {
           p-8
           rounded-2xl shadow-xl
         "
+        onSubmit={handleLogin}
       >
-        <label
-          className="flex flex-col text-white font-medium"
-          htmlFor="username"
-        >
-          Username
+        <label className="flex flex-col text-white font-medium" htmlFor="email">
+          Email
           <input
             required
             className="mt-1 p-2 rounded-md bg-white text-black"
-            type="text"
-            id="username"
+            type="email"
+            id="email"
+            onChange={(e) => setEmail(e.target.value)}
           />
         </label>
 
@@ -36,6 +53,7 @@ export function Login() {
             className="mt-1 p-2 rounded-md bg-white text-black"
             type="password"
             id="password"
+            onChange={(e) => setPassword(e.target.value)}
           />
         </label>
 

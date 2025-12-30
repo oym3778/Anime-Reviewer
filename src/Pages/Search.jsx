@@ -18,6 +18,7 @@ export function Search() {
   const [currentPage, setCurrentPage] = useState(1);
   const [animeList, setAnimeList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  // TODO potentially make this its own component to be used in multiple pages
   const [errorMsg, setErrorMsg] = useState(""); // TODO go through and make these user friendly, while mainting dev errors
 
   // Similar to useState hook except it will not re-mouunt the page on change

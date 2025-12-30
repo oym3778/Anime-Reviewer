@@ -1,6 +1,48 @@
 import { Link } from "react-router-dom";
 import { Navbar } from "../Components/Navbar";
+import { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../config/firestore";
+import { doc, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+
 export function SignUp() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordReEnter, setPasswordReEnter] = useState("");
+  const navigate = useNavigate();
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      const user = auth.currentUser;
+
+      if (user) {
+        // TODO Potentially seperate doc and setDoc to make more readable
+        await setDoc(doc(db, "Users", email), {
+          Friends: [],
+          Reviews: [
+            {
+              Title: "",
+              Review: "",
+            },
+          ],
+          email: email,
+          username: username,
+        });
+
+        console.log("Account Created!");
+        console.log(user);
+        navigate("/Search");
+        //TODO if you want to add some sort of toast message react toasity has some pre-built popups you can use
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col justify-center items-center w-screen h-screen bg-lime-700">
@@ -14,6 +56,7 @@ export function SignUp() {
           p-8
           rounded-2xl shadow-xl
         "
+          onSubmit={handleSignUp}
         >
           <label
             className="flex flex-col text-white font-medium"
@@ -25,18 +68,20 @@ export function SignUp() {
               className="mt-1 p-2 rounded-md bg-white text-black"
               type="text"
               id="username"
+              onChange={(e) => setUsername(e.target.value)}
             />
           </label>
           <label
             className="flex flex-col text-white font-medium"
-            htmlFor="username"
+            htmlFor="email"
           >
             Email
             <input
               required
               className="mt-1 p-2 rounded-md bg-white text-black"
-              type="text"
-              id="username"
+              type="email"
+              id="email"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </label>
 
@@ -50,18 +95,20 @@ export function SignUp() {
               className="mt-1 p-2 rounded-md bg-white text-black"
               type="password"
               id="password"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </label>
           <label
             className="flex flex-col text-white font-medium"
-            htmlFor="password"
+            htmlFor="passwordReEnter"
           >
             Re-Enter Password
             <input
               required
               className="mt-1 p-2 rounded-md bg-white text-black"
               type="password"
-              id="password"
+              id="passwordReEnter"
+              onChange={(e) => setPasswordReEnter(e.target.value)}
             />
           </label>
 
