@@ -3,7 +3,7 @@
 export function Spinner() {
   return (
     // TODO I dont think "text-center rtl:text-right" is actually doing anything since we use an li within a grid
-    <div className="text-center rtl:text-right">
+    <div className="mt-[25%] text-center rtl:text-right">
       <div role="status">
         <svg
           aria-hidden="true"

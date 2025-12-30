@@ -9,14 +9,21 @@ import { Profile } from "./Pages/Profile";
 import { Layout } from "./Components/Layout";
 import { auth } from "./config/firestore";
 import { useEffect, useState } from "react";
+import { Spinner } from "./Components/Spinner";
 
 function App() {
   const [user, setUser] = useState();
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
+      setLoading(false);
     });
   }, []);
+
+  // TODO Come back and get a new spinner, maybe...
+  if (loading) return <Spinner />;
   return (
     <HashRouter>
       <Routes>
@@ -33,7 +40,7 @@ function App() {
         {/* if the user logsout, they will be directed back to the login screen from all other open tabs
 
             Also prevent someone from typing in one of the paths without logging in first, 
-            TODO might want a default screen, but dont see why right now
+            TODO might want a default(index) screen, but dont see why right now
         */}
         <Route element={user ? <Layout /> : <Navigate to="/" replace />}>
           <Route path="profile" element={<Profile />} />
