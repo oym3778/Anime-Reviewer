@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Login } from "./Pages/Login";
 import { SignUp } from "./Pages/SignUp";
 import { Friends } from "./Pages/Friends";
@@ -7,21 +7,43 @@ import { Search } from "./Pages/Search";
 import { Review } from "./Pages/Review";
 import { Profile } from "./Pages/Profile";
 import { Layout } from "./Components/Layout";
+import { auth } from "./config/firestore";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [user, setUser] = useState();
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+  }, []);
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Login />} />{" "}
-        <Route path="/SignUp" element={<SignUp />} />
-        <Route element={<Layout />}>
-          <Route path="/Friends" element={<Friends />} />
-          <Route path="/MyReviews" element={<MyReviews />} />
-          <Route path="/Review" element={<Review />} />
-          <Route path="/Search" element={<Search />} />
-          <Route path="/Profile" element={<Profile />} />
+        {/* Public routes */}
+        {/* replace is used to prevent someone from logging in and pressing the back  leading them back to the login screen, if 
+        they want to logout I direct them to the profile page where the logout button should be fairly obvious */}
+        <Route
+          path="/"
+          element={user ? <Navigate to="/profile" replace /> : <Login />}
+        />
+        <Route path="/signup" element={<SignUp />} />
+
+        {/* Protected routes */}
+        {/* if the user logsout, they will be directed back to the login screen from all other open tabs
+
+            Also prevent someone from typing in one of the paths without logging in first, 
+            TODO might want a default screen, but dont see why right now
+        */}
+        <Route element={user ? <Layout /> : <Navigate to="/" replace />}>
+          <Route path="profile" element={<Profile />} />
+          <Route path="friends" element={<Friends />} />
+          <Route path="myreviews" element={<MyReviews />} />
+          <Route path="review" element={<Review />} />
+          <Route path="search" element={<Search />} />
         </Route>
-        <Route path="*" element={<Login />} />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </HashRouter>
   );
