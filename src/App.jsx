@@ -7,23 +7,20 @@ import { Search } from "./Pages/Search";
 import { Review } from "./Pages/Review";
 import { Profile } from "./Pages/Profile";
 import { Layout } from "./Components/Layout";
-import { auth } from "./config/firestore";
-import { useEffect, useState } from "react";
 import { Spinner } from "./Components/Spinner";
+import { useUser } from "./hooks/useUser";
 
 function App() {
-  const [user, setUser] = useState();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      setUser(user);
-      setLoading(false);
-    });
-  }, []);
+  const { user, loading } = useUser();
 
   // TODO Come back and get a new spinner, maybe...
-  if (loading) return <Spinner />;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
   return (
     <HashRouter>
       <Routes>
