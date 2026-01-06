@@ -1,4 +1,4 @@
-export default function ReviewCard({ review }) {
+export default function ReviewCard({ review, handleUpdate, handleDelete }) {
   const coverImg = review.coverImg;
   const displayTitle = review.title;
   const userReview = review.review;
@@ -47,6 +47,7 @@ export default function ReviewCard({ review }) {
           {/* Edit / Delete */}
           <div className="flex gap-3">
             <button
+              onClick={handleUpdate}
               className="px-4 py-2 rounded-lg bg-yellow-500 
                          text-black font-medium 
                          hover:bg-yellow-400 transition hover:cursor-pointer"
@@ -55,6 +56,7 @@ export default function ReviewCard({ review }) {
             </button>
 
             <button
+              onClick={handleDelete}
               className="px-4 py-2 rounded-lg bg-red-600 
                          text-white font-medium 
                          hover:bg-red-500 transition hover:cursor-pointer"

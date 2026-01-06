@@ -1,6 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { useState } from "react";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { useUser } from "../hooks/useUser";
 import { useNavigate } from "react-router";
@@ -33,13 +33,17 @@ export function Review() {
     try {
       // TODO start using UUID
       const userRef = doc(db, "Users", user.email);
+      // NOTE: I was confused as to why I needed brackets around the
+      // review when I assumed the template literals (backticks) would
+      // work however this is invalid JS syntax. Using brackets tells the
+      // computer to evaluate the  template literals
       await updateDoc(userRef, {
-        reviews: arrayUnion({
+        [`reviews.${animeId}`]: {
           title: displayTitle,
           review: userReview,
-          coverImg: coverImg,
-          animeId: animeId,
-        }),
+          coverImg,
+          animeId,
+        },
       });
       // TODO, potentially show a modal popup with sucess message for
       // user to see that a review was made
