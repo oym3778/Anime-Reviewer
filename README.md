@@ -11,7 +11,6 @@ The project focuses on user-generated content, social discovery, and AI-powered 
 - 🔐 **User Authentication** using Firebase Authentication  
 - 🔍 **Anime Search & Discovery** powered by the AniList GraphQL API  
 - 📝 **User Reviews** stored per-anime and per-user using Firestore
-- 🤖 **AI-Powered Review Insights** generated via Google’s AI API, analyzing similarities and differences between users’ reviews (In Progress)
 - 🧠 **Custom Auth Hook (`useUser`)** to centralize Firebase auth logic and handle real-time auth state changes  
 - 🧭 **Multi-Page Routing** with reusable components and clean separation of concerns  
 
