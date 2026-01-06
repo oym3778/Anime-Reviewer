@@ -40,7 +40,7 @@ export function Profile() {
     <div className="flex flex-col justify-center items-center w-auto h-screen bg-green-700">
       <div className="flex flex-row justify-around items-center w-[80%] h-[60%] bg-green-500 rounded-2xl shadow-xl">
         <img
-          className="border-6 border-green-700 rounded-full object-cover w-[350px] h-[350px]"
+          className="hover:cursor-pointer border-6 border-green-700 rounded-full object-cover w-[350px] h-[350px]"
           src="https://i.pinimg.com/736x/3d/0e/d3/3d0ed37c45061192214c2e8291e06384.jpg"
           alt="Profile"
         />
@@ -63,7 +63,7 @@ export function Profile() {
       <button
         onClick={handleLogout}
         className="bg-red-700 mt-4 w-[90%] max-w-[400px] py-3 rounded-xl 
-                   text-white font-semibold hover:bg-red-500/90 transition"
+                   text-white font-semibold hover:bg-red-500/90 transition hover:cursor-pointer"
       >
         Logout
       </button>

@@ -57,6 +57,9 @@ export function Search() {
     }
   }, [input, animeList]);
 
+  // TODO, I did some research on useEffect cleanup functions and believe this
+  // should be refactored to clean up on unmount if the user goes to a different page
+  // before allowing this to fully load. potnetially at least...
   useEffect(() => {
     if (skipNextFetchRef.current) {
       // we have restored matching animeList for this input — don't refetch now
