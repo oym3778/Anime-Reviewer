@@ -5,6 +5,7 @@ export function AnimeCard({ anime }) {
   const titleRomaji = anime.title.romaji;
   const coverImg = anime.coverImage.extraLarge;
   const displayTitle = titleEng || titleRomaji;
+  const animeId = anime.id;
 
   const navigate = useNavigate();
   const handleClick = () => {
@@ -30,6 +31,7 @@ export function AnimeCard({ anime }) {
       <p className="p-3 text-white font-semibold text-sm text-center break-words">
         {displayTitle}
       </p>
+      <p className="pb-2 text-white text-sm text-center">{animeId}</p>
     </li>
   );
 }
