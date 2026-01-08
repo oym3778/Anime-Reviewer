@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firestore";
@@ -6,14 +6,11 @@ import { auth } from "../config/firestore";
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-
-      console.log("Login successful");
     } catch (error) {
       console.log(error);
     }
@@ -57,6 +54,7 @@ export function Login() {
         </label>
 
         <button
+          type="submit"
           className="
             w-full py-3 rounded-xl 
             bg-blue-900 text-white 

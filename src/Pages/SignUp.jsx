@@ -35,8 +35,6 @@ export function SignUp() {
           username: username,
         });
 
-        console.log("Account Created!");
-        console.log(user);
         navigate("/Profile");
         //TODO if you want to add some sort of toast message react toasity has some pre-built popups you can use
       }

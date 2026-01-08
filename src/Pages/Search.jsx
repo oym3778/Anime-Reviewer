@@ -140,10 +140,8 @@ export function Search() {
 
         // TODO add pagination with currentPage...
         setAnimeList(data.data?.Page?.media ?? []);
-        // console.log(data.data.Page.media);
       } catch (error) {
         setErrorMsg(`fetchAnime() error: ${error.message}`);
-        console.log("fetchAnime() error:", error);
         // TODO come back to this throw error; // rethrow so populateAnimes() receives it too
       } finally {
         setIsLoading(false);
