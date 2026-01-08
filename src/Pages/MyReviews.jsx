@@ -4,14 +4,20 @@ import ReviewCard from "../Components/ReviewCard";
 import { Spinner } from "../Components/Spinner";
 import { doc, updateDoc, deleteField } from "firebase/firestore";
 import { db } from "../config/firestore";
+import { useNavigate } from "react-router-dom";
 
 export function MyReviews() {
   const [reviews, setReviews] = useState({});
   const { user, userData, loading } = useUser();
+  const navigate = useNavigate();
 
   const handleUpdateReview = async (e, animeId) => {
     e.preventDefault();
-    console.log(`update ${animeId}`);
+
+    // re-route back to the review page, with current anime info
+    // TODO: I'm not sure if this is optimized. Since we are creating an
+    // entierly new review and not updateing the specific attribte
+    navigate("/review", { state: reviews[animeId] });
   };
   const handleDeleteReview = async (e, animeId) => {
     e.preventDefault();
@@ -58,7 +64,9 @@ export function MyReviews() {
             <ReviewCard
               key={animeId}
               review={review}
-              handleUpdate={(e) => handleUpdateReview(e, animeId)}
+              handleUpdate={(e) => {
+                return handleUpdateReview(e, animeId);
+              }}
               handleDelete={(e) => handleDeleteReview(e, animeId)}
             />
           ))

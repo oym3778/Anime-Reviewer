@@ -6,32 +6,32 @@ import { useUser } from "../hooks/useUser";
 import { useNavigate } from "react-router";
 
 export function Review() {
-  const [userReview, setUserReview] = useState("");
-  const { user } = useUser();
   const location = useLocation();
-  let navigate = useNavigate();
-  const {
-    anime = {
-      title: { english: "null", romaji: "null" },
-      coverImage: {
-        extraLarge:
-          "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/default.jpg",
-      },
-      id: null,
+  const anime = location.state || {
+    title: { english: "null", romaji: "null" },
+    coverImage: {
+      extraLarge:
+        "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/default.jpg",
     },
-  } = location.state || {};
+    id: null,
+    review: "",
+  };
 
   const titleEng = anime.title.english;
   const titleRomaji = anime.title.romaji;
   const coverImg = anime.coverImage.extraLarge;
   const displayTitle = titleEng || titleRomaji;
   const animeId = anime.id;
+  const [userReview, setUserReview] = useState(anime.review || "");
 
+  const { user } = useUser();
+
+  let navigate = useNavigate();
   const handleAddReview = async (e) => {
     e.preventDefault();
 
     try {
-      // TODO start using UUID
+      // TODO start using UID
       const userRef = doc(db, "Users", user.email);
       // NOTE: I was confused as to why I needed brackets around the
       // review when I assumed the template literals (backticks) would
@@ -39,15 +39,19 @@ export function Review() {
       // computer to evaluate the  template literals
       await updateDoc(userRef, {
         [`reviews.${animeId}`]: {
-          title: displayTitle,
+          title: {
+            english: titleEng,
+            romaji: titleRomaji,
+          },
+          coverImage: {
+            extraLarge: coverImg,
+          },
+          id: animeId,
           review: userReview,
-          coverImg,
-          animeId,
         },
       });
       // TODO, potentially show a modal popup with sucess message for
       // user to see that a review was made
-      console.log("added review");
       navigate("/search");
     } catch (error) {
       console.log(error);
@@ -82,20 +86,25 @@ export function Review() {
           onChange={(e) => {
             setUserReview(e.target.value);
           }}
+          value={userReview}
           id="review-input"
           className="w-full min-h-[200px] p-4 rounded-xl bg-pink-500 text-white placeholder-white/60 outline-none focus:ring-4 focus:ring-pink-300 resize-none"
           placeholder="Write something..."
         ></textarea>
 
-        <div className="flex flex-row gap-6">
-          <button
-            type="submit"
-            className="button w-[50%] py-3 bg-white text-pink-700 font-bold rounded-xl shadow-md hover:bg-white/50 hover:cursor-pointer transition"
-          >
-            Submit
-          </button>
+        <div className="flex flex-row gap-6 justify-center">
+          {anime.id !== null ? (
+            <button
+              type="submit"
+              className="button w-[50%] py-3 bg-white text-pink-700 font-bold rounded-xl shadow-md hover:bg-white/50 hover:cursor-pointer transition"
+            >
+              Submit
+            </button>
+          ) : (
+            ""
+          )}
           <Link
-            to="/Search"
+            to={-1}
             disabled
             className="text-center button w-[50%] py-3 bg-white text-pink-700 font-bold rounded-xl shadow-md hover:bg-white/50 hover:cursor-pointer transition"
           >

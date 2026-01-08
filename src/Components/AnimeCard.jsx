@@ -9,8 +9,7 @@ export function AnimeCard({ anime }) {
 
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate("/review", { state: { anime } });
-    // console.log(displayTitle + " Was clicked");
+    navigate("/review", { state: anime });
   };
 
   return (

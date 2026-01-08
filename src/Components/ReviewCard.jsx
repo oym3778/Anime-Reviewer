@@ -1,7 +1,10 @@
 export default function ReviewCard({ review, handleUpdate, handleDelete }) {
-  const coverImg = review.coverImg;
-  const displayTitle = review.title;
+  // TODO there is a lot of repeat code between both the ReviewCard and AnimeCard, how can we reduce?
   const userReview = review.review;
+  const titleEng = review.title.english;
+  const titleRomaji = review.title.romaji;
+  const coverImg = review.coverImage.extraLarge;
+  const displayTitle = titleEng || titleRomaji;
 
   return (
     <li
@@ -44,7 +47,7 @@ export default function ReviewCard({ review, handleUpdate, handleDelete }) {
             AI Friend Review
           </button>
 
-          {/* Edit / Delete */}
+          {/* Update / Delete */}
           <div className="flex gap-3">
             <button
               onClick={handleUpdate}
