@@ -1,116 +1,70 @@
-# 🎌 Anime Review Hub
+# Revo — Anime Review & AI Insight Platform
 
-A personal **anime review and comparison platform** — currently in development.
+Revo is a full-stack React web application that allows users to create accounts, search anime via the AniList GraphQL API, write personalized reviews, and receive AI-generated insights comparing their tastes with friends.
 
-**Anime Review Hub** is a React-based project where users can search for anime, add them to a personal watch list, and write reviews to capture how each show made them feel.  
-The goal is to create a fun, personalized space for tracking your anime journey and discovering new shows through friends and shared preferences.
-
-This project is actively being built as part of my portfolio, with new features added weekly.
+The project focuses on user-generated content, social discovery, and AI-powered recommendations, built with scalable frontend architecture and Firebase-backed persistence.
 
 ---
 
-## 🚧 Current Status — In Development
+## 🚀 Key Features (Implemented)
 
-Core functionality currently being built:
-
-- 🔍 **Anime Search** using AniList’s GraphQL API
-- 📚 **Watch List** for ongoing and completed shows
-- 📝 **Custom Reviews** with structured questions (favorite character, moments, themes, etc.)
-- 🎨 **Frontend** using React + Vite + Tailwind for a responsive UI
-- 🧹 **Developer Tools** with ESLint + Prettier
+- 🔐 **User Authentication** using Firebase Authentication  
+- 🔍 **Anime Search & Discovery** powered by the AniList GraphQL API  
+- 📝 **User Reviews** stored per-anime and per-user using Firestore
+- 🧠 **Custom Auth Hook (`useUser`)** to centralize Firebase auth logic and handle real-time auth state changes  
+- 🧭 **Multi-Page Routing** with reusable components and clean separation of concerns  
 
 ---
 
-## ✨ Planned Features
+## 🧠 AI Insight Feature (In Progress)
 
-### 🔥 AI-Powered Review Insights
+Revo integrates Google’s AI API to analyze review text and generate:
 
-Using Google’s free AI API to generate:
+- Comparative insights between users’ anime preferences  
+- Highlighted similarities and differences in themes and tone  
+- Personalized recommendations for future anime to watch  
 
-- Review summaries
-- Personality-style breakdowns
-- Recommendation insights
-- Compatibility scores
-- Theme and writing-style analysis
-- Comparative opinions between friends
-
-### 👥 Friend System
-
-A social layer where users can:
-
-- Add friends
-- View their reviews
-- Compare tastes and preferences
-- Discover new shows through similarities or differences
-
-### ☁️ Firebase Integration
-
-Planned for storing:
-
-- Watch lists
-- Reviews
-- Friend connections
-- Settings and personalization
+The AI feature is designed to be informative, entertaining, and contextual, enhancing social discovery rather than replacing user opinion.
 
 ---
 
 ## 🛠 Tech Stack
 
 ### Frontend
+- React  
+- JavaScript (Vite)  
+- Tailwind CSS  
 
-- React
-- Vite
-- Tailwind CSS
+### APIs & Services
+- AniList GraphQL API  
+- Google AI API  
 
-### APIs & Data
+### Backend / Data
+- Firebase Authentication  
+- Firebase Firestore  
 
-- AniList GraphQL
-- Google AI API
-
-### Backend / Storage (Planned)
-
-- Firebase Authentication
-- Firebase Firestore
-
-### Developer Tools
-
-- ESLint
-- Prettier
+### Tooling
+- ESLint  
+- Prettier  
 
 ---
 
-## 📌 Why This Project?
+## 🏗 Architecture Notes
 
-This project brings together:
-
-- My interest in anime
-- My experience with React and front-end development
-- My desire to learn and use GraphQL
-- My curiosity about integrating AI into a real app
-- My goal of creating a deeper portfolio piece
-
-Anime Review Hub is helping me learn full application design — from API interactions to UI layouts, and eventually authentication and cloud storage.
+- Reviews are stored using a key–value mapping where each review is tied to a unique AniList anime ID.  
+- Firebase logic is encapsulated in a shared configuration layer to keep authentication and persistence concerns isolated from UI components.  
+- Designed with scalability in mind to support future social features such as friend connections and shared activity feeds.  
 
 ---
 
-## 📅 Project Roadmap
+## 📌 Current Status
 
-### Phase 1 — MVP (In Progress)
+Revo is actively under development. Core functionality is implemented, with additional social features and UI polish in progress.
 
-- Anime search
-- Watch list UI
-- Basic review creation
-- Inline review display
+---
 
-### Phase 2 — Social / AI
+## ▶️ Running Locally
 
-- Friend system
-- AI review summaries
-- Comparison dashboard
-
-### Phase 3 — Polishing
-
-- Responsive redesign
-- Micro-animations & transitions
-- Onboarding improvements
-- Dark mode
+```bash
+npm install
+npm run dev
