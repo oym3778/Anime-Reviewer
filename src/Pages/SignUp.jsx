@@ -23,13 +23,7 @@ export function SignUp() {
         // TODO Potentially seperate doc and setDoc to make more readable
         await setDoc(doc(db, "Users", user.email), {
           friends: [],
-          reviews: [
-            {
-              title: "",
-              review: "",
-              coverImg: "",
-            },
-          ],
+          reviews: [],
           bio: "",
           email: user.email,
           username: username,
