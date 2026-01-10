@@ -4,25 +4,19 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { useUser } from "../hooks/useUser";
 import { useNavigate } from "react-router";
+import Anime from "../models/Anime";
+import animeConverter from "../models/animeConverter";
 
 export function Review() {
+  // SHOULD RETURN A ANIME AND REVIEW OBJECT { anime, review}
   const location = useLocation();
-  const anime = location.state || {
-    title: { english: "null", romaji: "null" },
-    coverImage: {
-      extraLarge:
-        "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/default.jpg",
-    },
-    id: null,
-    review: "",
-  };
 
-  const titleEng = anime.title.english;
-  const titleRomaji = anime.title.romaji;
-  const coverImg = anime.coverImage.extraLarge;
-  const displayTitle = titleEng || titleRomaji;
-  const animeId = anime.id;
-  const [userReview, setUserReview] = useState(anime.review || "");
+  // TODO location.state will return either just an
+  // anime -> /AnimeCard
+  // anime with a review -> /MyReviews
+  const { anime, review } = location.state ?? { anime: {}, review: {} };
+  const currentAnime = new Anime(anime);
+  const [userReview, setUserReview] = useState(review.openEnded || "");
 
   const { user } = useUser();
 
@@ -38,16 +32,11 @@ export function Review() {
       // work however this is invalid JS syntax. Using brackets tells the
       // computer to evaluate the  template literals
       await updateDoc(userRef, {
-        [`reviews.${animeId}`]: {
-          title: {
-            english: titleEng,
-            romaji: titleRomaji,
+        [`reviews.${currentAnime.animeId}`]: {
+          anime: animeConverter.toFirestore(currentAnime),
+          review: {
+            openEnded: userReview,
           },
-          coverImage: {
-            extraLarge: coverImg,
-          },
-          id: animeId,
-          review: userReview,
         },
       });
       // TODO, potentially show a modal popup with sucess message for
@@ -64,11 +53,11 @@ export function Review() {
       <div className="flex flex-col justify-center items-center mb-12">
         <img
           className="rounded-xl shadow-lg w-[250px] md:w-[300px]"
-          src={coverImg}
-          alt={`${displayTitle} poster`}
+          src={currentAnime.largeCoverImg}
+          alt={`${currentAnime.displayTitle} poster`}
         />
         <h1 className="text-5xl mt-6 font-bold tracking-wide text-white">
-          {displayTitle}
+          {currentAnime.displayTitle}
         </h1>
       </div>
 
@@ -93,7 +82,7 @@ export function Review() {
         ></textarea>
 
         <div className="flex flex-row gap-6 justify-center">
-          {anime.id !== null ? (
+          {currentAnime.animeId !== null ? (
             <button
               type="submit"
               className="button w-[50%] py-3 bg-white text-pink-700 font-bold rounded-xl shadow-md hover:bg-white/50 hover:cursor-pointer transition"

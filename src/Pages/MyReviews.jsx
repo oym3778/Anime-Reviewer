@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../hooks/useUser";
-import ReviewCard from "../Components/ReviewCard";
-import { Spinner } from "../Components/Spinner";
+import { Spinner } from "../components/Spinner";
 import { doc, updateDoc, deleteField } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { useNavigate } from "react-router-dom";
+import ReviewCard from "../components/ReviewCard";
 
 export function MyReviews() {
   const [reviews, setReviews] = useState({});
@@ -17,7 +17,11 @@ export function MyReviews() {
     // re-route back to the review page, with current anime info
     // TODO: I'm not sure if this is optimized. Since we are creating an
     // entierly new review and not updateing the specific attribte
-    navigate("/review", { state: reviews[animeId] });
+    // Similar to /AnimeCard except /AnimeCard navigates to the /review page sending just an anime,
+    // but /review should always expect a review and an anime regardless
+    navigate("/review", {
+      state: { anime: reviews[animeId].anime, review: reviews[animeId].review },
+    });
   };
   const handleDeleteReview = async (e, animeId) => {
     e.preventDefault();
@@ -60,10 +64,12 @@ export function MyReviews() {
       <h1 className="text-5xl mb-10 text-white">My Reviews</h1>
       <ol className="max-w-[800px] space-y-6">
         {reviews && Object.keys(reviews).length > 0 ? (
-          Object.entries(reviews).map(([animeId, review]) => (
+          // [animeId = Key, review = Value]
+          Object.entries(reviews).map(([animeId, curReview]) => (
             <ReviewCard
               key={animeId}
-              review={review}
+              anime={curReview.anime}
+              review={curReview.review}
               handleUpdate={(e) => {
                 return handleUpdateReview(e, animeId);
               }}

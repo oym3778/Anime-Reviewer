@@ -1,10 +1,17 @@
-export default function ReviewCard({ review, handleUpdate, handleDelete }) {
-  // TODO there is a lot of repeat code between both the ReviewCard and AnimeCard, how can we reduce?
-  const userReview = review.review;
-  const titleEng = review.title.english;
-  const titleRomaji = review.title.romaji;
-  const coverImg = review.coverImage.extraLarge;
-  const displayTitle = titleEng || titleRomaji;
+import Anime from "../models/Anime";
+export default function ReviewCard({
+  review,
+  anime,
+  handleUpdate,
+  handleDelete,
+}) {
+  // TODO expand on the reviews!
+  //  -Favorite Character
+  //  -Favorite Moment
+  //  NOTE: using openEnded as default for now
+  const userReview = review.openEnded;
+  // **TODO**, i could say fromFirestore here and have it convert through the converter... maybe might need to
+  const currentAnime = new Anime(anime);
 
   return (
     <li
@@ -14,14 +21,16 @@ export default function ReviewCard({ review, handleUpdate, handleDelete }) {
       {/* Cover Image */}
       <img
         className="w-[120px] h-[180px] object-cover rounded"
-        src={coverImg}
-        alt={displayTitle}
+        src={currentAnime.largeCoverImg}
+        alt={currentAnime.displayTitle}
       />
 
       {/* Content */}
       <div className="flex flex-col justify-between flex-1">
         <div>
-          <h1 className="text-2xl font-semibold mb-3">{displayTitle}</h1>
+          <h1 className="text-2xl font-semibold mb-3">
+            {currentAnime.displayTitle}
+          </h1>
           <p className="leading-relaxed">{userReview}</p>
         </div>
 

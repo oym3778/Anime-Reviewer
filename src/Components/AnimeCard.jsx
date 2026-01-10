@@ -1,15 +1,17 @@
 import { useNavigate } from "react-router-dom";
+import Anime from "../models/Anime";
 
-export function AnimeCard({ anime }) {
-  const titleEng = anime.title.english;
-  const titleRomaji = anime.title.romaji;
-  const coverImg = anime.coverImage.extraLarge;
-  const displayTitle = titleEng || titleRomaji;
-  const animeId = anime.id;
+export default function AnimeCard({ anime }) {
+  const currentAnime = new Anime(anime);
 
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate("/review", { state: anime });
+    // Since These Cards dont have review information and we just want to display the default anime
+    // The user will fill in the review on the review page
+    // Similar to /MyReviews except /MyReviews navigates to the /review page to update a review
+    // which is why /review should always expect a review and an anime
+    const review = {};
+    navigate("/review", { state: { anime, review } });
   };
 
   return (
@@ -21,16 +23,18 @@ export function AnimeCard({ anime }) {
       <div className="w-full aspect-[3/4] overflow-hidden">
         <img
           className="w-full h-full object-cover"
-          src={coverImg}
-          alt={`${displayTitle} poster`}
+          src={currentAnime.largeCoverImg}
+          alt={`${currentAnime.displayTitle} poster`}
         />
       </div>
 
       {/* Title container */}
       <p className="p-3 text-white font-semibold text-sm text-center break-words">
-        {displayTitle}
+        {currentAnime.displayTitle}
       </p>
-      <p className="pb-2 text-white text-sm text-center">{animeId}</p>
+      <p className="pb-2 text-white text-sm text-center">
+        {currentAnime.animeId}
+      </p>
     </li>
   );
 }
