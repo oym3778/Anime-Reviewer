@@ -28,6 +28,30 @@ The AI feature is designed to be informative, entertaining, and contextual, enha
 
 ---
 
+## 📸 Progress & UI Screenshots
+
+Below are snapshots of Revo’s current functionality and UI as development progresses.
+
+### Authentication
+<img width="2588" height="1308" alt="signin_login" src="https://github.com/user-attachments/assets/6757d703-d4aa-4172-9a25-f39536eea49e" />
+
+### Anime Search & Discovery
+<img width="1300" height="1306" alt="search" src="https://github.com/user-attachments/assets/0932368d-8dc1-4cf0-b65e-7152641a6eb8" />
+
+### Reviews Overview
+<img width="1301" height="1305" alt="reviews" src="https://github.com/user-attachments/assets/b389045b-b1df-47d5-b79c-714fcea11d03" />
+
+### Individual Review Page
+<img width="1302" height="1304" alt="review" src="https://github.com/user-attachments/assets/023f5384-1d36-45f6-aa2d-7ddae2ae4c68" />
+
+### User Profile
+<img width="1300" height="1304" alt="profile" src="https://github.com/user-attachments/assets/b288cdd6-a055-4b71-9077-e040855358fd" />
+
+### Friends & Social Discovery
+<img width="1301" height="1304" alt="friends" src="https://github.com/user-attachments/assets/8ef92c41-55d2-41bf-ba4d-6f58060bd80e" />
+
+---
+
 ## 🛠 Tech Stack
 
 ### Frontend
