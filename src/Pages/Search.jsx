@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { SearchBar } from "../Components/SearchBar";
-import { Spinner } from "../Components/Spinner";
-import { AnimeCard } from "../Components/AnimeCard";
+import { SearchBar } from "../components/SearchBar";
+import { Spinner } from "../components/Spinner";
+import AnimeCard from "../components/AnimeCard";
 import { useDebounce } from "react-use";
 
 /* keys used in sessionStorage */
@@ -57,9 +57,11 @@ export function Search() {
     }
   }, [input, animeList]);
 
-  // TODO, I did some research on useEffect cleanup functions and believe this
+  // 1) TODO, I did some research on useEffect cleanup functions and believe this
   // should be refactored to clean up on unmount if the user goes to a different page
   // before allowing this to fully load. potnetially at least...
+  // 2) TODO When i search on one profile the same search input showes up on another
+  // user profile if i logout and login to another user i think the above note will solve this
   useEffect(() => {
     if (skipNextFetchRef.current) {
       // we have restored matching animeList for this input — don't refetch now
@@ -139,6 +141,8 @@ export function Search() {
         }
 
         // TODO add pagination with currentPage...
+        // Keep in mind Page obj returns both media and pageInfo,
+        // you'll need to extract next page as such
         setAnimeList(data.data?.Page?.media ?? []);
       } catch (error) {
         setErrorMsg(`fetchAnime() error: ${error.message}`);

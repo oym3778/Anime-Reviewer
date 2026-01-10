@@ -36,8 +36,7 @@ function App() {
         {/* Protected routes */}
         {/* if the user logsout, they will be directed back to the login screen from all other open tabs
 
-            Also prevent someone from typing in one of the paths without logging in first, 
-            TODO might want a default(index) screen, but dont see why right now
+            Also prevent someone from typing in one of the paths without logging in first
         */}
         <Route element={user ? <Layout /> : <Navigate to="/" replace />}>
           <Route path="profile" element={<Profile />} />
