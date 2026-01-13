@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Navbar } from "../components/Navbar";
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../config/firestore";
@@ -16,24 +15,29 @@ export function SignUp() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      const user = auth.currentUser;
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
 
       if (user) {
-        // TODO Potentially seperate doc and setDoc to make more readable
-        await setDoc(doc(db, "Users", user.email), {
+        await setDoc(doc(db, "Users", user.uid), {
           friends: [],
           reviews: [],
           bio: "",
           email: user.email,
           username: username,
+          createdAt: new Date(),
         });
 
         navigate("/Profile");
         //TODO if you want to add some sort of toast message react toasity has some pre-built popups you can use
       }
     } catch (error) {
-      console.log(error);
+      console.log("SignUp Failed: " + error);
     }
   };
 

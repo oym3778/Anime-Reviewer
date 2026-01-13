@@ -31,7 +31,7 @@ export function MyReviews() {
       return updated;
     });
 
-    const userRef = doc(db, "Users", user.email);
+    const userRef = doc(db, "Users", user.uid);
 
     await updateDoc(userRef, {
       [`reviews.${animeId}`]: deleteField(),

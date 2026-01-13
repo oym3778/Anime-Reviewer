@@ -25,8 +25,7 @@ export function Review() {
     e.preventDefault();
 
     try {
-      // TODO start using UID
-      const userRef = doc(db, "Users", user.email);
+      const userRef = doc(db, "Users", user.uid);
       // NOTE: I was confused as to why I needed brackets around the
       // review when I assumed the template literals (backticks) would
       // work however this is invalid JS syntax. Using brackets tells the
