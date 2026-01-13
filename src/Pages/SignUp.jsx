@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../config/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 export function SignUp() {
@@ -14,30 +14,58 @@ export function SignUp() {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+
+    let user = null;
     try {
+      // We need to set up a Firebase Transaction
+      // 1) Check if Usernames/{username} exists
+      //    if not:
+      //      Create it
+      //      Create Users/{uid}
+      //    else username already taken, please enter a different one
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      const user = userCredential.user;
+      user = userCredential.user;
 
-      if (user) {
-        await setDoc(doc(db, "Users", user.uid), {
+      await runTransaction(db, async (transaction) => {
+        const usernameRef = doc(db, "Usernames", username);
+        const userRef = doc(db, "Users", user.uid);
+
+        const usernameSnap = await transaction.get(usernameRef);
+        // TODO add some more logic for username uniquness, toLower() trim() etc
+        if (usernameSnap.exists()) {
+          throw new Error("Username already exists");
+        }
+
+        const createdAt = serverTimestamp();
+
+        transaction.set(usernameRef, {
+          uid: user.uid,
+          createdAt: createdAt,
+        });
+
+        transaction.set(userRef, {
+          username,
+          bio: "",
           friends: [],
           reviews: [],
-          bio: "",
-          email: user.email,
-          username: username,
-          createdAt: new Date(),
+          createdAt: createdAt,
         });
 
         navigate("/Profile");
         //TODO if you want to add some sort of toast message react toasity has some pre-built popups you can use
-      }
+      });
     } catch (error) {
       console.log("SignUp Failed: " + error);
+      //Rollback Auth user if Firestore failed
+      if (user) {
+        await user.delete();
+      }
     }
   };
 
