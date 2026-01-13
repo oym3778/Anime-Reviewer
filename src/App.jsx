@@ -1,13 +1,13 @@
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Login } from "./Pages/Login";
-import { SignUp } from "./Pages/SignUp";
-import { Friends } from "./Pages/Friends";
-import { MyReviews } from "./Pages/MyReviews";
-import { Search } from "./Pages/Search";
-import { Review } from "./Pages/Review";
-import { Profile } from "./Pages/Profile";
-import { Layout } from "./Components/Layout";
-import { Spinner } from "./Components/Spinner";
+import { Login } from "./pages/Login";
+import { SignUp } from "./pages/SignUp";
+import { Friends } from "./pages/Friends";
+import { MyReviews } from "./pages/MyReviews";
+import { Search } from "./pages/Search";
+import { Review } from "./pages/Review";
+import { Profile } from "./pages/Profile";
+import { Layout } from "./components/Layout";
+import { Spinner } from "./components/Spinner";
 import { useUser } from "./hooks/useUser";
 
 function App() {

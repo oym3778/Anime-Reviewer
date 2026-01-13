@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../config/firestore";
 import { useUser } from "../hooks/useUser";
-import { Spinner } from "../Components/Spinner";
+import { Spinner } from "../components/Spinner";
 
 export function Profile() {
   const { user, userData, loading } = useUser();

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Navbar } from "../Components/Navbar";
+import { Navbar } from "../components/Navbar";
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../config/firestore";
