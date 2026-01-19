@@ -23,7 +23,6 @@ export function SignUp() {
       //      Create it
       //      Create Users/{uid}
       //    else username already taken, please enter a different one
-
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -52,8 +51,9 @@ export function SignUp() {
         transaction.set(userRef, {
           username,
           bio: "",
-          friends: [],
           reviews: [],
+          profilePicture:
+            "https://s4.anilist.co/file/anilistcdn/character/large/b8298-ATUVKng0oyHR.png",
           createdAt: createdAt,
         });
 

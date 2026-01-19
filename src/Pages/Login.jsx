@@ -12,7 +12,7 @@ export function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      console.log(error);
+      console.log("Login error: " + error);
     }
   };
   return (

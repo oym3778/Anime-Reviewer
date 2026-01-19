@@ -4,6 +4,9 @@ https://studio.apollographql.com/sandbox/explorer
 Watch this video for firebase tutorial https://www.youtube.com/watch?v=LCvBPsuHe6g
 Firebase authentication https://www.youtube.com/watch?v=GE27BkUZbXk
 Read to refresh on env variables with Vite https://dev.to/ebereplenty/how-to-use-environment-variables-in-a-reactjs-app-with-vite-3lh0
+
+
+// for all animes
 query ($search: String!) {
 Page {
 media(search: $search, type: ANIME) {
@@ -18,4 +21,32 @@ extraLarge
 }
 }
 }
+}
+
+// for character informatio based on anime id:
+query Media($mediaId: Int) {
+  Media(id: $mediaId) {
+      title {
+      english
+      romaji
+    }
+    characters {
+      nodes {
+        id
+        image {
+          medium
+        }
+        name {
+          first
+          middle
+          last
+          full
+          native
+          alternative
+          userPreferred
+        }
+      }
+    }
+  
+  }
 }
