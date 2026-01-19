@@ -41,7 +41,7 @@ export function Profile() {
       <div className="flex flex-row justify-around items-center w-[80%] h-[60%] bg-green-500 rounded-2xl shadow-xl">
         <img
           className="hover:cursor-pointer border-6 border-green-700 rounded-full object-cover w-[350px] h-[350px]"
-          src="https://i.pinimg.com/736x/3d/0e/d3/3d0ed37c45061192214c2e8291e06384.jpg"
+          src={userData ? userData.profilePicture : ""}
           alt="Profile"
         />
 

@@ -30,6 +30,8 @@ export function Review() {
       // review when I assumed the template literals (backticks) would
       // work however this is invalid JS syntax. Using brackets tells the
       // computer to evaluate the  template literals
+
+      // TODO might have to make reviews its own subcollection to prevent users from seeing eachothers reviews
       await updateDoc(userRef, {
         [`reviews.${currentAnime.animeId}`]: {
           anime: animeConverter.toFirestore(currentAnime),

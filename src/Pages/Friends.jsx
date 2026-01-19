@@ -1,8 +1,172 @@
+import FriendCard from "../components/FriendCard";
+import { useUser } from "../hooks/useUser";
+import { useState, useEffect } from "react";
+import {
+  doc,
+  runTransaction,
+  serverTimestamp,
+  collection,
+  query,
+  where,
+  onSnapshot,
+  deleteDoc,
+  writeBatch,
+} from "firebase/firestore";
+
+import { db } from "../config/firestore";
+
 export function Friends() {
+  const { user } = useUser();
+  const [responderUsername, setResponderUsername] = useState("");
+  const [friendRequests, setFriendRequests] = useState([]);
+  const [friends, setFriends] = useState([]);
+
+  // When the logged-in user changes, attach a realtime listener
+  // to that user's pending friend requests
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    // Query pending friend requests where the current user is the responder
+    const q = query(
+      collection(db, "FriendRequests"),
+      where("responderUID", "==", user.uid),
+      where("status", "==", "pending")
+    );
+
+    // Attach a realtime Firestore listener:
+    // - runs immediately with current data
+    // - re-runs whenever matching documents change
+    // onSnapshot returns a function that cancels the Firestore listener.
+    // React's cleanup phase is where we call that cancellation function.
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const requests = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setFriendRequests(requests);
+    });
+
+    // on unmount firebase will automaticlally stop listening for use and remove listener
+    return () => unsubscribe();
+
+    // user?.uid is a dependency not because Firestore updates,
+    // but because the active user's identity determines
+    // which realtime listener should exist
+  }, [user?.uid]);
+
+  // Check to see if the user has friends, set friends
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    const friendsRef = collection(db, "Users", user.uid, "friends");
+
+    const unsubscribe = onSnapshot(friendsRef, (snapshot) => {
+      setFriends(snapshot.docs.map((doc) => doc.id));
+    });
+
+    return unsubscribe;
+  }, [user?.uid]);
+
+  const handleSendFriendRequest = async (e) => {
+    e.preventDefault();
+
+    try {
+      await runTransaction(db, async (transaction) => {
+        // Send a request IF responder username exist
+        const responderRef = doc(db, "Usernames", responderUsername);
+        const responderSnap = await transaction.get(responderRef);
+
+        // TODO responder is already your friend
+        // ...
+
+        if (!responderSnap.exists()) {
+          throw new Error(
+            `The Username:"${responderUsername}" does not exist `
+          );
+        }
+
+        const responderUID = responderSnap.data()["uid"];
+        const requesterUID = user.uid;
+
+        if (requesterUID === responderUID) {
+          throw new Error(`You can not friend yourself`);
+        }
+
+        // Canonical ordering so users dont send eachother friend requests while a request is already pending,
+        // one user will need to be the deciding factor
+        // Firebase UID length ≈ 28 characters, this is not a case worth optemizing since the string length is so small
+        // even if the search is O(n), insignificant
+        let compositeId;
+        if (requesterUID < responderUID) {
+          compositeId = `${requesterUID}_${responderUID}`;
+        } else {
+          compositeId = `${responderUID}_${requesterUID}`;
+        }
+
+        const friendRequestsRef = doc(db, "FriendRequests", compositeId);
+        const friendRequestsSnap = await transaction.get(friendRequestsRef);
+        // check if the friend request already exists
+        if (friendRequestsSnap.exists()) {
+          // IF someone sent me the requuest, I need to make a decision
+          // TODO, this doesnt actually work...
+          if (friendRequestsSnap.data()["responderId"] === requesterUID) {
+            throw new Error(
+              `Please select an option on your pending request with: ${responderUsername}`
+            );
+            // throw new Error("Please select an option...");
+          } else {
+            // Else I need to wait
+            throw new Error(
+              `You have a pending request to: ${responderUsername}, please wait for a response`
+            );
+            // throw new Error("You have a pending request...");
+          }
+        }
+
+        transaction.set(friendRequestsRef, {
+          requesterUID: user.uid,
+          responderUID: responderUID,
+          status: "pending",
+          createdAt: serverTimestamp(),
+        });
+      });
+
+      console.log("Sent Friend Request to: " + responderUsername);
+    } catch (error) {
+      console.log("Friend Request Failed", error);
+    }
+  };
+  const handleAcceptFriendRequest = async (request) => {
+    const { requesterUID, responderUID, id } = request;
+
+    // Useing a batch write instead of Promise.all:
+    // - Promise.all can result in partial success if one write fails
+    // - Batch writes are atomic (all succeed or all fail)
+    // - No reads or retry logic needed, unlike transactions
+    const batch = writeBatch(db);
+
+    batch.set(doc(db, "Users", requesterUID, "friends", responderUID), {
+      addedAt: serverTimestamp(),
+    });
+    batch.set(doc(db, "Users", responderUID, "friends", requesterUID), {
+      addedAt: serverTimestamp(),
+    });
+
+    batch.delete(doc(db, "FriendRequests", id));
+    await batch.commit();
+  };
+  const handleRejectFriendRequest = async (requestId) => {
+    await deleteDoc(doc(db, "FriendRequests", requestId));
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center gap-16 bg-yellow-700 p-8">
       {/* Add Friend Form */}
-      <form className="bg-yellow-500 p-6 rounded-xl shadow-lg w-full max-w-[500px] flex flex-col gap-4">
+      <form
+        onSubmit={(e) => handleSendFriendRequest(e)}
+        className="bg-yellow-500 p-6 rounded-xl shadow-lg w-full max-w-[500px] flex flex-col gap-4"
+      >
         <label
           htmlFor="friend-username"
           className="font-bold text-xl text-yellow-900"
@@ -11,6 +175,9 @@ export function Friends() {
         </label>
 
         <input
+          onChange={(e) => {
+            setResponderUsername(e.target.value);
+          }}
           required
           type="text"
           id="friend-username"
@@ -29,15 +196,22 @@ export function Friends() {
       {/* Pending Requests */}
       <div id="pending-request" className="w-full max-w-[600px]">
         <h2 className="text-3xl font-bold text-white mb-4">Pending Requests</h2>
+
         <ul className="bg-yellow-500 p-4 rounded-xl shadow-lg flex flex-col gap-4">
-          <li className="bg-yellow-600 rounded-xl p-4 flex items-center gap-4 shadow">
-            <img
-              className="w-[70px] h-[90px] object-cover rounded-lg"
-              src="https://i.redd.it/urdubdsb97781.jpg"
-              alt="Pending friend"
-            />
-            <p className="text-xl text-white font-semibold">Omar_M</p>
-          </li>
+          {friendRequests.length <= 0 ? (
+            <h1 className="text-center">No pending requests</h1>
+          ) : (
+            friendRequests.map((request) => {
+              return (
+                <FriendCard
+                  key={request.id}
+                  request={request}
+                  handleAccept={handleAcceptFriendRequest}
+                  handleReject={handleRejectFriendRequest}
+                ></FriendCard>
+              );
+            })
+          )}
         </ul>
       </div>
 
@@ -45,14 +219,20 @@ export function Friends() {
       <div id="friends-list" className="w-full max-w-[600px]">
         <h2 className="text-3xl font-bold text-white mb-4">Friends</h2>
         <ul className="bg-yellow-500 p-4 rounded-xl shadow-lg flex flex-col gap-4">
-          <li className="bg-yellow-600 rounded-xl p-4 flex items-center gap-4 shadow">
-            <img
-              className="w-[70px] h-[90px] object-cover rounded-lg"
-              src="https://i.pinimg.com/736x/3d/0e/d3/3d0ed37c45061192214c2e8291e06384.jpg"
-              alt="Friend"
-            />
-            <p className="text-xl text-white font-semibold">Talia_B</p>
-          </li>
+          {friends.length > 0 ? (
+            friends.map((friendUID) => {
+              return (
+                <FriendCard
+                  key={friendUID}
+                  friendUID={friendUID}
+                  handleAccept={handleAcceptFriendRequest}
+                  handleReject={handleRejectFriendRequest}
+                ></FriendCard>
+              );
+            })
+          ) : (
+            <h1 className="text-center">No Friends ;-;</h1>
+          )}
         </ul>
       </div>
     </div>
