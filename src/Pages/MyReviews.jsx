@@ -1,22 +1,20 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../hooks/useUser";
 import { Spinner } from "../components/Spinner";
-import { doc, updateDoc, deleteField } from "firebase/firestore";
+import { doc, updateDoc, deleteField, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { useNavigate } from "react-router-dom";
 import ReviewCard from "../components/ReviewCard";
 
 export function MyReviews() {
   const [reviews, setReviews] = useState({});
-  const { user, userData, loading } = useUser();
+  const { user, loading } = useUser();
   const navigate = useNavigate();
 
   const handleUpdateReview = async (e, animeId) => {
     e.preventDefault();
 
     // re-route back to the review page, with current anime info
-    // TODO: I'm not sure if this is optimized. Since we are creating an
-    // entierly new review and not updateing the specific attribte
     // Similar to /AnimeCard except /AnimeCard navigates to the /review page sending just an anime,
     // but /review should always expect a review and an anime regardless
     navigate("/review", {
@@ -39,23 +37,19 @@ export function MyReviews() {
   };
 
   useEffect(() => {
-    const getReviews = async () => {
-      try {
-        if (!loading) {
-          setReviews(await userData["reviews"]);
-        }
-      } catch (error) {
-        console.log("Error retrieving reviews: ", error);
-      }
-    };
-    getReviews();
-  }, [userData, loading]);
+    if (!user?.uid) return;
+    const unsubscribe = onSnapshot(doc(db, "Users", user.uid), (snapshot) => {
+      setReviews(snapshot.data()["reviews"]);
+    });
+
+    return () => unsubscribe();
+  }, [user?.uid]);
 
   // prevents the user from seeing default values
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Spinner loadingText="Loading reviews..." />
+        <Spinner loadingText="Loading Reviews..." />
       </div>
     );
   }

@@ -5,7 +5,7 @@ export function Spinner({ loadingText }) {
     <div role="status" className="flex flex-col items-center gap-4">
       <svg
         aria-hidden="true"
-        className="w-16 h-16 text-neutral-500 animate-spin fill-orange-700"
+        className="w-16 h-16 text-neutral-500 animate-spin fill-white"
         viewBox="0 0 100 101"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -19,7 +19,11 @@ export function Spinner({ loadingText }) {
         />
       </svg>
 
-      {loadingText && <p className="text-white text-xl">{loadingText}</p>}
+      {loadingText ? (
+        <p className="text-white text-xl">{loadingText}</p>
+      ) : (
+        <p className="text-white text-xl">Loading...</p>
+      )}
 
       <span className="sr-only">Loading...</span>
     </div>

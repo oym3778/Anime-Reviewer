@@ -31,7 +31,7 @@ export function Profile() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Spinner loadingText="Loading profile..." />
+        <Spinner loadingText="Loading Profile..." />
       </div>
     );
   }

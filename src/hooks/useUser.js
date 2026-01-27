@@ -21,7 +21,6 @@ export function useUser() {
         return;
       }
 
-      // TODO Fetch additional user data from Firestore using a stable UID NOT EMAIL, using email for now...
       const ref = doc(db, "Users", currentUser.uid);
       const snap = await getDoc(ref);
 
@@ -31,10 +30,9 @@ export function useUser() {
 
     // Cleanup: remove the Firebase auth listener when the component unmounts
     return () => unsubscribe();
-
-    // TODO, im not sure if this is bad practice but it does get the effect i want,
-    // to show on userdata change within the ui for myReviews page
-  }, [user, userData, loading]);
+    // Intentionally empty dependency array:
+    // Auth listener manages its own lifecycle
+  }, []);
 
   return { user, userData, loading };
 }

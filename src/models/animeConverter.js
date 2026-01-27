@@ -14,8 +14,9 @@ const animeConverter = {
       },
     };
   },
-  // TODO Should really test this, but at no point do i
-  // want to search for a specific anime from the reviews on its own. as of now atleast...
+
+  // Currently, I never retrieve an anime from firestore, since if I really needed too,
+  // I can get it from the AniList API
   fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options);
     return new Anime(data);

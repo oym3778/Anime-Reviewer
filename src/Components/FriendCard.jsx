@@ -75,7 +75,7 @@ export default function FriendCard({
           </div>
 
           {/* If this is a pending request, show options */}
-          {request?.status === "pending" ? (
+          {request?.status === "pending" && (
             <div className="flex gap-2">
               <button
                 onClick={() => handleAccept(request)}
@@ -91,12 +91,10 @@ export default function FriendCard({
                 Reject
               </button>
             </div>
-          ) : (
-            ""
           )}
         </li>
       ) : (
-        <Spinner></Spinner>
+        <Spinner loadingText="Loading Friends..."></Spinner>
       )}
     </>
   );

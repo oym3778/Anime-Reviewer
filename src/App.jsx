@@ -13,7 +13,6 @@ import { useUser } from "./hooks/useUser";
 function App() {
   const { user, loading } = useUser();
 
-  // TODO Come back and get a new spinner, maybe...
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

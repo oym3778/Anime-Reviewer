@@ -8,10 +8,10 @@ import Anime from "../models/Anime";
 import animeConverter from "../models/animeConverter";
 
 export function Review() {
-  // SHOULD RETURN A ANIME AND REVIEW OBJECT { anime, review}
+  // SHOULD RETURN A ANIME AND REVIEW OBJECT { anime, review }
   const location = useLocation();
 
-  // TODO location.state will return either just an
+  // location.state will return either just an
   // anime -> /AnimeCard
   // anime with a review -> /MyReviews
   const { anime, review } = location.state ?? { anime: {}, review: {} };
@@ -25,11 +25,18 @@ export function Review() {
     e.preventDefault();
 
     try {
+      // prevents the additional write if nothing changed
+      // TODO show pop ups whenever an error or success happens
+      if (userReview === review.openEnded) {
+        navigate("/myreviews");
+        throw new Error("No changes were made");
+      }
+
       const userRef = doc(db, "Users", user.uid);
       // NOTE: I was confused as to why I needed brackets around the
       // review when I assumed the template literals (backticks) would
       // work however this is invalid JS syntax. Using brackets tells the
-      // computer to evaluate the  template literals
+      // computer to evaluate the template literals
 
       // TODO might have to make reviews its own subcollection to prevent users from seeing eachothers reviews
       await updateDoc(userRef, {
@@ -44,7 +51,7 @@ export function Review() {
       // user to see that a review was made
       navigate("/search");
     } catch (error) {
-      console.log(error);
+      console.log("Error Adding/Updating Review" + error);
     }
   };
 
@@ -83,15 +90,13 @@ export function Review() {
         ></textarea>
 
         <div className="flex flex-row gap-6 justify-center">
-          {currentAnime.animeId !== null ? (
+          {currentAnime.animeId !== null && (
             <button
               type="submit"
               className="button w-[50%] py-3 bg-white text-pink-700 font-bold rounded-xl shadow-md hover:bg-white/50 hover:cursor-pointer transition"
             >
               Submit
             </button>
-          ) : (
-            ""
           )}
           <Link
             to={-1}

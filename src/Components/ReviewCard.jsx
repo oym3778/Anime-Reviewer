@@ -7,10 +7,9 @@ export default function ReviewCard({
 }) {
   // TODO expand on the reviews!
   //  -Favorite Character
-  //  -Favorite Moment
+  //  -Favorite Momment
   //  NOTE: using openEnded as default for now
   const userReview = review.openEnded;
-  // **TODO**, i could say fromFirestore here and have it convert through the converter... maybe might need to
   const currentAnime = new Anime(anime);
 
   return (

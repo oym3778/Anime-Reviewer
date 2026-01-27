@@ -9,10 +9,6 @@ const STORAGE_KEY_TERM = "search_term";
 const STORAGE_KEY_RESULTS = "search_results";
 
 export function Search() {
-  // TODO input sounds broad, maybe searchTerm and setSearchTerm.
-  // Be carful, the fetchAnime() uses that var aswell
-  // TODO figure out how to keep the input persitent among routes, i dont
-  //    want to retype a search term if i just wanted to see my reviews
   const [input, setInput] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -171,7 +167,7 @@ export function Search() {
             </li>
           ) : isLoading ? (
             <li className="col-span-full flex justify-center items-center">
-              <Spinner />
+              <Spinner loadingText="Searching..." />
             </li>
           ) : errorMsg ? (
             <h1>{errorMsg}</h1>
