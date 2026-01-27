@@ -15,6 +15,7 @@ export function SignUp() {
   const handleSignUp = async (e) => {
     e.preventDefault();
 
+    // TODO check to see if username is valid, i think firebase has some valid checks we can use
     let user = null;
     try {
       // We need to set up a Firebase Transaction
@@ -26,7 +27,7 @@ export function SignUp() {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
 
       user = userCredential.user;

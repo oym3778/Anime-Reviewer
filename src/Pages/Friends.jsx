@@ -14,12 +14,15 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../config/firestore";
+import ErrorLogger from "../utilities/errorLogger";
 
 export function Friends() {
   const { user } = useUser();
   const [responderUsername, setResponderUsername] = useState("");
   const [friendRequests, setFriendRequests] = useState([]);
   const [friends, setFriends] = useState([]);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   // When the logged-in user changes, attach a realtime listener
   // to that user's pending friend requests
@@ -30,7 +33,7 @@ export function Friends() {
     const q = query(
       collection(db, "FriendRequests"),
       where("responderUID", "==", user.uid),
-      where("status", "==", "pending")
+      where("status", "==", "pending"),
     );
 
     // Attach a realtime Firestore listener:
@@ -38,15 +41,29 @@ export function Friends() {
     // - re-runs whenever matching documents change
     // onSnapshot returns a function that cancels the Firestore listener.
     // React's cleanup phase is where we call that cancellation function.
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const requests = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const unsubscribe = onSnapshot(
+      q,
+      { includeMetadataChanges: true },
+      (snapshot) => {
+        const requests = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-      setFriendRequests(requests);
-    });
+        setFriendRequests(requests);
 
+        // NOTE: I wanted to figure out how many reads these snapshot listeners cost me and found that
+        // firestore does a great job of caching the data for you, even if youu decide
+        // to go to another tab, i.e profile page and come back, as long as the
+        // data for that snapshot hasnt changed, it'll cost no adiitonal read
+        // using includeMetadataChanges: true allows you to receive more granular information
+        // if (snapshot.metadata.fromCache) {
+        //   console.log("Data came from local cache (maybe stale)");
+        // } else {
+        //   console.log("Data came from the server (fresh)");
+        // }
+      },
+    );
     // on unmount firebase will automaticlally stop listening for use and remove listener
     return () => unsubscribe();
 
@@ -77,20 +94,36 @@ export function Friends() {
         const responderRef = doc(db, "Usernames", responderUsername);
         const responderSnap = await transaction.get(responderRef);
 
-        // TODO responder is already your friend
-        // ...
-
         if (!responderSnap.exists()) {
-          throw new Error(
-            `The Username:"${responderUsername}" does not exist `
+          const logger = new ErrorLogger(
+            `The Username: "${responderUsername}" does not exist`,
+            `Responder not found. username=${responderUsername}`,
+            { username: responderUsername },
           );
+
+          logger.notify(setErrorMsg);
+          logger.throw();
         }
 
         const responderUID = responderSnap.data()["uid"];
         const requesterUID = user.uid;
 
+        if (friends.includes(responderUID)) {
+          const logger = new ErrorLogger(
+            `${responderUsername} is already your friend`,
+            null,
+            { responderUID: responderUID },
+          );
+
+          logger.notify(setErrorMsg);
+          logger.throw();
+        }
+
         if (requesterUID === responderUID) {
-          throw new Error(`You can not friend yourself`);
+          const logger = new ErrorLogger(`You can not friend yourself`);
+
+          logger.notify(setErrorMsg);
+          logger.throw();
         }
 
         // Canonical ordering so users dont send eachother friend requests while a request is already pending,
@@ -108,19 +141,20 @@ export function Friends() {
         const friendRequestsSnap = await transaction.get(friendRequestsRef);
         // check if the friend request already exists
         if (friendRequestsSnap.exists()) {
-          // IF someone sent me the requuest, I need to make a decision
-          // TODO, this doesnt actually work...
-          if (friendRequestsSnap.data()["responderId"] === requesterUID) {
-            throw new Error(
-              `Please select an option on your pending request with: ${responderUsername}`
+          // IF someone sent me the request, I need to make a decision
+          if (friendRequestsSnap.data()["responderUID"] === requesterUID) {
+            const logger = new ErrorLogger(
+              `Please select an option for: ${responderUsername}`,
             );
-            // throw new Error("Please select an option...");
+            logger.notify(setErrorMsg);
+            logger.throw();
           } else {
             // Else I need to wait
-            throw new Error(
-              `You have a pending request to: ${responderUsername}, please wait for a response`
+            const logger = new ErrorLogger(
+              `You have a pending request to: ${responderUsername}`,
             );
-            // throw new Error("You have a pending request...");
+            logger.notify(setErrorMsg);
+            logger.throw();
           }
         }
 
@@ -132,13 +166,15 @@ export function Friends() {
         });
       });
 
-      console.log("Sent Friend Request to: " + responderUsername);
+      setSuccessMsg("Sent Friend Request to: " + responderUsername);
+      setErrorMsg(null);
     } catch (error) {
-      console.log("Friend Request Failed", error);
+      console.log("Friend Request Failed ", error);
     }
   };
   const handleAcceptFriendRequest = async (request) => {
     const { requesterUID, responderUID, id } = request;
+    //TODO have a toast message for this
 
     // Useing a batch write instead of Promise.all:
     // - Promise.all can result in partial success if one write fails
@@ -184,6 +220,17 @@ export function Friends() {
           className="p-3 rounded-lg bg-yellow-200 text-yellow-900 outline-none focus:ring-4 focus:ring-yellow-300"
           placeholder="Enter username..."
         />
+        {errorMsg ? (
+          <h1 className="bg-red-50 px-4 py-3 text-sm text-red-700">
+            {errorMsg}
+          </h1>
+        ) : (
+          successMsg && (
+            <h1 className="bg-green-50 px-4 py-3 text-sm text-green-700">
+              {successMsg}
+            </h1>
+          )
+        )}
 
         <button
           type="submit"
