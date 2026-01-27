@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Anime from "../models/Anime";
+import Anime from "../utilities/Anime";
 
 export default function AnimeCard({ anime }) {
   const currentAnime = new Anime(anime);

@@ -4,8 +4,8 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { useUser } from "../hooks/useUser";
 import { useNavigate } from "react-router";
-import Anime from "../models/Anime";
-import animeConverter from "../models/animeConverter";
+import Anime from "../utilities/Anime";
+import animeConverter from "../utilities/animeConverter";
 
 export function Review() {
   // SHOULD RETURN A ANIME AND REVIEW OBJECT { anime, review }

@@ -1,4 +1,4 @@
-import Anime from "../models/Anime";
+import Anime from "../utilities/Anime";
 export default function ReviewCard({
   review,
   anime,
