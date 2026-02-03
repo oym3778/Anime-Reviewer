@@ -1,24 +1,22 @@
-export default class ErrorLogger {
-  constructor(uiMessage, devMessage = null, meta = {}) {
-    this.uiMessage = uiMessage;
-    this.devMessage = devMessage ?? uiMessage;
-    this.meta = meta;
-    this.error = new Error(this.devMessage);
-    this.error.meta = meta;
-  }
+import { toast } from "react-toastify";
 
-  log() {
-    console.error(this.error);
-    // send to remote logging if configured
-    // Remote logging means sending error information outside the user’s
-    // browser to a service or server where developers can see it later.
-  }
+export function logError(uiMessage, meta = {}, devMessage = uiMessage) {
+  const error = new Error(devMessage);
+  error.meta = meta;
 
-  notify(setError) {
-    if (typeof setError === "function") setError(this.uiMessage);
-  }
+  // console.error(error);
+  // TODO send to remote logging here
 
-  throw() {
-    throw this.error;
-  }
+  return { error, uiMessage };
+}
+
+// Statless, given toastID we can work together with react. Given a state variable we display it
+// can also be used to show sucess messages, but by default well use type error
+export function showToast(toastId, message, type = "error") {
+  toast.update(toastId, {
+    render: message,
+    type,
+    autoClose: 3000,
+    isLoading: false,
+  });
 }
