@@ -21,7 +21,10 @@ export function Profile() {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      await signOut(auth).then(toast.success("Logged out"));
+      await signOut(auth).then(() => {
+        toast.success("Logged out");
+        sessionStorage.clear();
+      });
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);

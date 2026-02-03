@@ -5,6 +5,7 @@ import AnimeCard from "../components/AnimeCard";
 import { useDebounce } from "react-use";
 import { logError } from "../utilities/errorLogger";
 import { toast } from "react-toastify";
+
 /* keys used in sessionStorage */
 const STORAGE_KEY_TERM = "search_term";
 const STORAGE_KEY_RESULTS = "search_results";
@@ -37,8 +38,8 @@ export function Search() {
         skipNextFetchRef.current = true;
         restoredRef.current = true;
       }
-    } catch (err) {
-      console.warn("Failed to read search state from sessionStorage", err);
+    } catch (error) {
+      console.warn("Failed to read search state from sessionStorage" + error);
     }
   }, []); // run once on mount
 
@@ -52,11 +53,6 @@ export function Search() {
     }
   }, [input, animeList]);
 
-  // 1) TODO, I did some research on useEffect cleanup functions and believe this
-  // should be refactored to clean up on unmount if the user goes to a different page
-  // before allowing this to fully load. potnetially at least...
-  // 2) TODO When i search on one profile the same search input showes up on another
-  // user profile if i logout and login to another user i think the above note will solve this
   useEffect(() => {
     if (skipNextFetchRef.current) {
       // we have restored matching animeList for this input — don't refetch now
@@ -148,7 +144,6 @@ export function Search() {
         setIsLoading(false);
       }
     };
-
     fetchAnime(debouncedInput);
   }, [currentPage, debouncedInput]);
 
@@ -162,7 +157,7 @@ export function Search() {
         <ul className="grid gap-5 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           {!isLoading ? (
             animeList.length === 0 ? (
-              input !== "" ? (
+              debouncedInput !== "" ? (
                 <li className="col-span-full text-center">
                   Hmm, I cant find any anime with that name
                 </li>
