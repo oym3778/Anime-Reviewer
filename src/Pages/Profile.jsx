@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../config/firestore";
 import { useUser } from "../hooks/useUser";
 import { Spinner } from "../components/Spinner";
+import { toast } from "react-toastify";
 
 export function Profile() {
   const { user, userData, loading } = useUser();
@@ -13,17 +14,18 @@ export function Profile() {
   // if user isn't logged in, the App component should already direct them to the login page
   useEffect(() => {
     if (!loading && !user) {
-      navigate("/Login");
+      navigate("/login");
     }
   }, [loading, user, navigate]);
 
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      await signOut(auth);
-      navigate("/Login");
+      await signOut(auth).then(toast.success("Logged out"));
+      navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
+      toast.error("Logout failed");
     }
   };
 

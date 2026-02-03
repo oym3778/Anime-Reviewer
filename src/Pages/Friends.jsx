@@ -14,15 +14,14 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../config/firestore";
-import ErrorLogger from "../utilities/errorLogger";
+import { logError, showToast } from "../utilities/errorLogger";
+import { toast } from "react-toastify";
 
 export function Friends() {
   const { user } = useUser();
   const [responderUsername, setResponderUsername] = useState("");
   const [friendRequests, setFriendRequests] = useState([]);
   const [friends, setFriends] = useState([]);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
 
   // When the logged-in user changes, attach a realtime listener
   // to that user's pending friend requests
@@ -88,6 +87,7 @@ export function Friends() {
   const handleSendFriendRequest = async (e) => {
     e.preventDefault();
 
+    const toastId = toast.loading("Trying to send request...");
     try {
       await runTransaction(db, async (transaction) => {
         // Send a request IF responder username exist
@@ -95,35 +95,31 @@ export function Friends() {
         const responderSnap = await transaction.get(responderRef);
 
         if (!responderSnap.exists()) {
-          const logger = new ErrorLogger(
+          const { error, uiMessage } = logError(
             `The Username: "${responderUsername}" does not exist`,
-            `Responder not found. username=${responderUsername}`,
             { username: responderUsername },
+            `Responder not found. username=${responderUsername}`,
           );
-
-          logger.notify(setErrorMsg);
-          logger.throw();
+          showToast(toastId, uiMessage);
+          throw error;
         }
 
         const responderUID = responderSnap.data()["uid"];
         const requesterUID = user.uid;
 
         if (friends.includes(responderUID)) {
-          const logger = new ErrorLogger(
+          const { error, uiMessage } = logError(
             `${responderUsername} is already your friend`,
-            null,
             { responderUID: responderUID },
           );
-
-          logger.notify(setErrorMsg);
-          logger.throw();
+          showToast(toastId, uiMessage);
+          throw error;
         }
 
         if (requesterUID === responderUID) {
-          const logger = new ErrorLogger(`You can not friend yourself`);
-
-          logger.notify(setErrorMsg);
-          logger.throw();
+          const { error, uiMessage } = logError(`You can not friend yourself`);
+          showToast(toastId, uiMessage);
+          throw error;
         }
 
         // Canonical ordering so users dont send eachother friend requests while a request is already pending,
@@ -143,18 +139,18 @@ export function Friends() {
         if (friendRequestsSnap.exists()) {
           // IF someone sent me the request, I need to make a decision
           if (friendRequestsSnap.data()["responderUID"] === requesterUID) {
-            const logger = new ErrorLogger(
+            const { error, uiMessage } = logError(
               `Please select an option for: ${responderUsername}`,
             );
-            logger.notify(setErrorMsg);
-            logger.throw();
+            showToast(toastId, uiMessage);
+            throw error;
           } else {
             // Else I need to wait
-            const logger = new ErrorLogger(
+            const { error, uiMessage } = logError(
               `You have a pending request to: ${responderUsername}`,
             );
-            logger.notify(setErrorMsg);
-            logger.throw();
+            showToast(toastId, uiMessage);
+            throw error;
           }
         }
 
@@ -166,15 +162,17 @@ export function Friends() {
         });
       });
 
-      setSuccessMsg("Sent Friend Request to: " + responderUsername);
-      setErrorMsg(null);
+      showToast(
+        toastId,
+        `Sent Friend Request to: ${responderUsername}`,
+        "success",
+      );
     } catch (error) {
       console.log("Friend Request Failed ", error);
     }
   };
   const handleAcceptFriendRequest = async (request) => {
     const { requesterUID, responderUID, id } = request;
-    //TODO have a toast message for this
 
     // Useing a batch write instead of Promise.all:
     // - Promise.all can result in partial success if one write fails
@@ -190,10 +188,12 @@ export function Friends() {
     });
 
     batch.delete(doc(db, "FriendRequests", id));
-    await batch.commit();
+    await batch.commit().then(toast.success("Accepted!"));
   };
   const handleRejectFriendRequest = async (requestId) => {
-    await deleteDoc(doc(db, "FriendRequests", requestId));
+    await deleteDoc(doc(db, "FriendRequests", requestId)).then(
+      toast.success("Rejected!"),
+    );
   };
 
   return (
@@ -220,17 +220,6 @@ export function Friends() {
           className="p-3 rounded-lg bg-yellow-200 text-yellow-900 outline-none focus:ring-4 focus:ring-yellow-300"
           placeholder="Enter username..."
         />
-        {errorMsg ? (
-          <h1 className="bg-red-50 px-4 py-3 text-sm text-red-700">
-            {errorMsg}
-          </h1>
-        ) : (
-          successMsg && (
-            <h1 className="bg-green-50 px-4 py-3 text-sm text-green-700">
-              {successMsg}
-            </h1>
-          )
-        )}
 
         <button
           type="submit"

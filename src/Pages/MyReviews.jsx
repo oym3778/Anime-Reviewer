@@ -5,6 +5,7 @@ import { doc, updateDoc, deleteField, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { useNavigate } from "react-router-dom";
 import ReviewCard from "../components/ReviewCard";
+import { toast } from "react-toastify";
 
 export function MyReviews() {
   const [reviews, setReviews] = useState({});
@@ -33,7 +34,7 @@ export function MyReviews() {
 
     await updateDoc(userRef, {
       [`reviews.${animeId}`]: deleteField(),
-    });
+    }).then(toast.success("Deleted Review"));
   };
 
   useEffect(() => {

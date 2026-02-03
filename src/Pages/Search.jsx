@@ -3,7 +3,8 @@ import { SearchBar } from "../components/SearchBar";
 import { Spinner } from "../components/Spinner";
 import AnimeCard from "../components/AnimeCard";
 import { useDebounce } from "react-use";
-
+import { logError } from "../utilities/errorLogger";
+import { toast } from "react-toastify";
 /* keys used in sessionStorage */
 const STORAGE_KEY_TERM = "search_term";
 const STORAGE_KEY_RESULTS = "search_results";
@@ -14,8 +15,6 @@ export function Search() {
   const [currentPage, setCurrentPage] = useState(1);
   const [animeList, setAnimeList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  // TODO potentially make this its own component to be used in multiple pages
-  const [errorMsg, setErrorMsg] = useState(""); // TODO go through and make these user friendly, while mainting dev errors
 
   // Similar to useState hook except it will not re-mouunt the page on change
   // Prevent the first fetch after restoring cached results from sessionStorage.
@@ -76,7 +75,6 @@ export function Search() {
       }
 
       setIsLoading(true);
-      setErrorMsg("");
 
       // TODO look up common practices for where to place queries from GraphQL within React projects
       try {
@@ -125,15 +123,19 @@ export function Search() {
 
         // If the fetch fails (400, 404, etc), response.json() might still run.
         if (!response.ok) {
-          setErrorMsg(`HTTP error: ${response.status}`);
-          // throw new Error(`HTTP error: ${response.status}`);
+          const { error, uiMessage } = logError(
+            `HTTP error: ${response.status}`,
+          );
+          toast.error(uiMessage);
+          throw error;
         }
 
         const data = await response.json();
         // Explicitly check for GraphQL errors
         if (data.errors) {
-          setErrorMsg(data.errors[0].message);
-          throw new Error(data.errors[0].message);
+          const { error, uiMessage } = logError(data.errors[0].message);
+          toast.error(uiMessage);
+          throw error;
         }
 
         // TODO add pagination with currentPage...
@@ -141,8 +143,7 @@ export function Search() {
         // you'll need to extract next page as such
         setAnimeList(data.data?.Page?.media ?? []);
       } catch (error) {
-        setErrorMsg(`fetchAnime() error: ${error.message}`);
-        // TODO come back to this throw error; // rethrow so populateAnimes() receives it too
+        console.log("Search Error: " + error);
       } finally {
         setIsLoading(false);
       }
@@ -156,25 +157,29 @@ export function Search() {
       <SearchBar input={input} setInput={setInput}></SearchBar>
       <div
         id="search-result"
-        // TODO Lags when stretching or shrinking... figure out why
         className="bg-orange-500 w-[80%] max-w-[1200px] min-w-[475px] p-10 rounded-xl shadow-xl"
       >
         <ul className="grid gap-5 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-          {/* TODO come back and re think logic, just seems a bit much. */}
-          {animeList.length === 0 && !errorMsg ? (
-            <li className="col-span-full text-center">
-              Try Searching Something!
-            </li>
-          ) : isLoading ? (
+          {!isLoading ? (
+            animeList.length === 0 ? (
+              input !== "" ? (
+                <li className="col-span-full text-center">
+                  Hmm, I cant find any anime with that name
+                </li>
+              ) : (
+                <li className="col-span-full text-center">
+                  Try Searching Something!
+                </li>
+              )
+            ) : (
+              animeList.map((anime) => (
+                <AnimeCard key={anime["id"]} anime={anime} />
+              ))
+            )
+          ) : (
             <li className="col-span-full flex justify-center items-center">
               <Spinner loadingText="Searching..." />
             </li>
-          ) : errorMsg ? (
-            <h1>{errorMsg}</h1>
-          ) : (
-            animeList.map((anime) => (
-              <AnimeCard key={anime["id"]} anime={anime} />
-            ))
           )}
         </ul>
       </div>

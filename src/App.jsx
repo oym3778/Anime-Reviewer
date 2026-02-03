@@ -9,7 +9,7 @@ import { Profile } from "./pages/Profile";
 import { Layout } from "./components/Layout";
 import { Spinner } from "./components/Spinner";
 import { useUser } from "./hooks/useUser";
-
+import { ToastContainer } from "react-toastify";
 function App() {
   const { user, loading } = useUser();
 
@@ -22,6 +22,11 @@ function App() {
   }
   return (
     <HashRouter>
+      <ToastContainer
+        ariaLabel="Auth notifications"
+        position="bottom-center"
+        stacked
+      />
       <Routes>
         {/* Public routes */}
         {/* replace is used to prevent someone from logging in and pressing the back  leading them back to the login screen, if 

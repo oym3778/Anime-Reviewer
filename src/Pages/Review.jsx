@@ -4,8 +4,10 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { useUser } from "../hooks/useUser";
 import { useNavigate } from "react-router";
+import { logError } from "../utilities/errorLogger";
 import Anime from "../utilities/Anime";
 import animeConverter from "../utilities/animeConverter";
+import { toast } from "react-toastify";
 
 export function Review() {
   // SHOULD RETURN A ANIME AND REVIEW OBJECT { anime, review }
@@ -26,10 +28,11 @@ export function Review() {
 
     try {
       // prevents the additional write if nothing changed
-      // TODO show pop ups whenever an error or success happens
       if (userReview === review.openEnded) {
         navigate("/myreviews");
-        throw new Error("No changes were made");
+        const { error, uiMessage } = logError("No changes were made");
+        toast.warn(uiMessage);
+        throw error;
       }
 
       const userRef = doc(db, "Users", user.uid);
@@ -47,9 +50,9 @@ export function Review() {
           },
         },
       });
-      // TODO, potentially show a modal popup with sucess message for
       // user to see that a review was made
-      navigate("/search");
+      navigate("/myreviews");
+      toast.success("Added Review!");
     } catch (error) {
       console.log("Error Adding/Updating Review" + error);
     }

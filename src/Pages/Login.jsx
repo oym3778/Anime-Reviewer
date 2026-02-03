@@ -2,17 +2,26 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firestore";
-
+import { setPersistence, browserSessionPersistence } from "firebase/auth";
+import { toast } from "react-toastify";
+import { showToast } from "../utilities/errorLogger";
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    const toastId = toast.loading("Logging In...");
     try {
+      // I believe this fixes the firefox ETP issue, keeps persistence of browser sessions,
+      // so if user closes browser out, we log them out
+      // review https://jorgevergara.co/blog/firebase-auth-persistence/ if changes arise
+      await setPersistence(auth, browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
+      showToast(toastId, "Login Successful!", "success");
     } catch (error) {
       console.log("Login error: " + error);
+      showToast(toastId, "Invalid Credentials");
     }
   };
   return (

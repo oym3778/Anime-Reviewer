@@ -4,6 +4,9 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../config/firestore";
 import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { logError, showToast } from "../utilities/errorLogger";
+import { setPersistence, browserSessionPersistence } from "firebase/auth";
 
 export function SignUp() {
   const [username, setUsername] = useState("");
@@ -16,7 +19,9 @@ export function SignUp() {
     e.preventDefault();
 
     // TODO check to see if username is valid, i think firebase has some valid checks we can use
+    // TODO also have password checks
     let user = null;
+    const toastId = toast.loading("Creating Account...");
     try {
       // We need to set up a Firebase Transaction
       // 1) Check if Usernames/{username} exists
@@ -24,12 +29,20 @@ export function SignUp() {
       //      Create it
       //      Create Users/{uid}
       //    else username already taken, please enter a different one
+      // Explicitly set Firebase Auth persistence
+      // I believe this fixes the firefox ETP issue, keeps persistence of browser sessions,
+      // so if user closes browser out, we log them out
+      // review https://jorgevergara.co/blog/firebase-auth-persistence/ if changes arise
+      await setPersistence(auth, browserSessionPersistence);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password,
-      );
-
+      ).catch((e) => {
+        const { error, uiMessage } = logError(e.code);
+        showToast(toastId, uiMessage);
+        throw error;
+      });
       user = userCredential.user;
 
       await runTransaction(db, async (transaction) => {
@@ -39,7 +52,9 @@ export function SignUp() {
         const usernameSnap = await transaction.get(usernameRef);
         // TODO add some more logic for username uniquness, toLower() trim() etc
         if (usernameSnap.exists()) {
-          throw new Error("Username already exists");
+          const { error, uiMessage } = logError("Username already exists");
+          showToast(toastId, uiMessage);
+          throw error;
         }
 
         const createdAt = serverTimestamp();
@@ -57,12 +72,13 @@ export function SignUp() {
             "https://s4.anilist.co/file/anilistcdn/character/large/b8298-ATUVKng0oyHR.png",
           createdAt: createdAt,
         });
-
-        navigate("/Profile");
-        //TODO if you want to add some sort of toast message react toasity has some pre-built popups you can use
       });
+
+      navigate("/profile");
+      showToast(toastId, "Account Created!", "success");
     } catch (error) {
       console.log("SignUp Failed: " + error);
+
       //Rollback Auth user if Firestore failed
       if (user) {
         await user.delete();
@@ -149,7 +165,6 @@ export function SignUp() {
             Sign-Up
           </button>
         </form>
-
         <Link
           to="/"
           className="
