@@ -91,7 +91,11 @@ export function Friends() {
     try {
       await runTransaction(db, async (transaction) => {
         // Send a request IF responder username exist
-        const responderRef = doc(db, "Usernames", responderUsername);
+        const responderRef = doc(
+          db,
+          "Usernames",
+          responderUsername.trim().toLowerCase(),
+        );
         const responderSnap = await transaction.get(responderRef);
 
         if (!responderSnap.exists()) {
