@@ -126,7 +126,6 @@ export function SignUp() {
         transaction.set(userRef, {
           username,
           bio: "",
-          reviews: [],
           profilePicture:
             "https://s4.anilist.co/file/anilistcdn/character/large/b8298-ATUVKng0oyHR.png",
           createdAt: createdAt,

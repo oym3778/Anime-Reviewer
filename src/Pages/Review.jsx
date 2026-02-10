@@ -1,6 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { useState } from "react";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { useUser } from "../hooks/useUser";
 import { useNavigate } from "react-router";
@@ -35,26 +35,31 @@ export function Review() {
         throw error;
       }
 
-      const userRef = doc(db, "Users", user.uid);
+      // NOTE - terrible error logged here (TypeError: n.indexOf is not a function) means you have an invalid doc reference.
+      // YOU MUST USE STRINGS WHEN CREATING A REFERENCE, wish it said that....
+      const userRef = doc(
+        db,
+        "Users",
+        user.uid,
+        "reviews",
+        String(currentAnime.animeId),
+      );
       // NOTE: I was confused as to why I needed brackets around the
       // review when I assumed the template literals (backticks) would
       // work however this is invalid JS syntax. Using brackets tells the
       // computer to evaluate the template literals
 
-      // TODO might have to make reviews its own subcollection to prevent users from seeing eachothers reviews
-      await updateDoc(userRef, {
-        [`reviews.${currentAnime.animeId}`]: {
-          anime: animeConverter.toFirestore(currentAnime),
-          review: {
-            openEnded: userReview,
-          },
+      await setDoc(userRef, {
+        anime: animeConverter.toFirestore(currentAnime),
+        review: {
+          openEnded: userReview,
         },
       });
       // user to see that a review was made
       navigate("/myreviews");
       toast.success("Added Review!");
     } catch (error) {
-      console.log("Error Adding/Updating Review" + error);
+      console.log("Error Adding/Updating Review " + error);
     }
   };
 
