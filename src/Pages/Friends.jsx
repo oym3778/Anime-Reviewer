@@ -1,6 +1,7 @@
 import FriendCard from "../components/FriendCard";
-import { useUser } from "../hooks/useUser";
-import { useState, useEffect } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import { FriendsContext } from "../contexts/FriendsContext";
+import { useState, useEffect, useContext } from "react";
 import {
   doc,
   runTransaction,
@@ -18,11 +19,10 @@ import { logError, showToast } from "../utilities/errorLogger";
 import { toast } from "react-toastify";
 
 export function Friends() {
-  const { user } = useUser();
+  const { user } = useContext(AuthContext);
+  const friends = useContext(FriendsContext);
   const [responderUsername, setResponderUsername] = useState("");
   const [friendRequests, setFriendRequests] = useState([]);
-  const [friends, setFriends] = useState([]);
-
   // When the logged-in user changes, attach a realtime listener
   // to that user's pending friend requests
   useEffect(() => {
@@ -69,19 +69,6 @@ export function Friends() {
     // user?.uid is a dependency not because Firestore updates,
     // but because the active user's identity determines
     // which realtime listener should exist
-  }, [user?.uid]);
-
-  // Check to see if the user has friends, set friends
-  useEffect(() => {
-    if (!user?.uid) return;
-
-    const friendsRef = collection(db, "Users", user.uid, "friends");
-
-    const unsubscribe = onSnapshot(friendsRef, (snapshot) => {
-      setFriends(snapshot.docs.map((doc) => doc.id));
-    });
-
-    return unsubscribe;
   }, [user?.uid]);
 
   const handleSendFriendRequest = async (e) => {
@@ -182,17 +169,26 @@ export function Friends() {
     // - Promise.all can result in partial success if one write fails
     // - Batch writes are atomic (all succeed or all fail)
     // - No reads or retry logic needed, unlike transactions
-    const batch = writeBatch(db);
+    try {
+      const batch = writeBatch(db);
 
-    batch.set(doc(db, "Users", requesterUID, "friends", responderUID), {
-      addedAt: serverTimestamp(),
-    });
-    batch.set(doc(db, "Users", responderUID, "friends", requesterUID), {
-      addedAt: serverTimestamp(),
-    });
+      batch.set(doc(db, "Users", requesterUID, "friends", responderUID), {
+        addedAt: serverTimestamp(),
+      });
+      batch.set(doc(db, "Users", responderUID, "friends", requesterUID), {
+        addedAt: serverTimestamp(),
+      });
 
-    batch.delete(doc(db, "FriendRequests", id));
-    await batch.commit().then(toast.success("Accepted!"));
+      batch.delete(doc(db, "FriendRequests", id));
+      await batch.commit().catch((e) => {
+        const { error, uiMessage } = logError(e);
+        toast.error(uiMessage.message);
+        throw error;
+      });
+      toast.success("Accepted!");
+    } catch (error) {
+      console.log("Error AcceptFriendRequest: " + error);
+    }
   };
   const handleRejectFriendRequest = async (requestId) => {
     await deleteDoc(doc(db, "FriendRequests", requestId)).then(
@@ -259,8 +255,8 @@ export function Friends() {
       <div id="friends-list" className="w-full max-w-[600px]">
         <h2 className="text-3xl font-bold text-white mb-4">Friends</h2>
         <ul className="bg-yellow-500 p-4 rounded-xl shadow-lg flex flex-col gap-4">
-          {friends.length > 0 ? (
-            friends.map((friendUID) => {
+          {friends.size > 0 ? (
+            Array.from(friends).map((friendUID) => {
               return (
                 <FriendCard
                   key={friendUID}

@@ -1,10 +1,17 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { AuthProvider } from "./contexts/AuthProvider.jsx";
+import { FriendsProvider } from "./contexts/FriendsProvider.jsx";
+
 import "./index.css";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App />
+    <AuthProvider>
+      <FriendsProvider>
+        <App />
+      </FriendsProvider>
+    </AuthProvider>
   </StrictMode>,
 );

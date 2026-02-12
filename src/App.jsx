@@ -4,14 +4,17 @@ import { SignUp } from "./pages/SignUp";
 import { Friends } from "./pages/Friends";
 import { MyReviews } from "./pages/MyReviews";
 import { Search } from "./pages/Search";
+import { AIReview } from "./pages/AIReview";
 import { Review } from "./pages/Review";
 import { Profile } from "./pages/Profile";
 import { Layout } from "./components/Layout";
 import { Spinner } from "./components/Spinner";
-import { useUser } from "./hooks/useUser";
+import { AuthContext } from "./contexts/AuthContext";
+import { useContext } from "react";
 import { ToastContainer } from "react-toastify";
+
 function App() {
-  const { user, loading } = useUser();
+  const { user, loading } = useContext(AuthContext);
 
   if (loading) {
     return (
@@ -48,6 +51,7 @@ function App() {
           <Route path="myreviews" element={<MyReviews />} />
           <Route path="review" element={<Review />} />
           <Route path="search" element={<Search />} />
+          <Route path="aireview" element={<AIReview />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

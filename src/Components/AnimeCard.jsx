@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Anime from "../utilities/Anime";
 
+// TODO If i've already left a review on the anime, it should gray out
 export default function AnimeCard({ anime }) {
   const currentAnime = new Anime(anime);
 

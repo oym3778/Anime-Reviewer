@@ -1,13 +1,13 @@
 import { signOut } from "firebase/auth";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../config/firestore";
-import { useUser } from "../hooks/useUser";
+import { AuthContext } from "../contexts/AuthContext";
 import { Spinner } from "../components/Spinner";
 import { toast } from "react-toastify";
 
 export function Profile() {
-  const { user, userData, loading } = useUser();
+  const { user, userData, loading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Never intended to run, a safety feature just in case,
