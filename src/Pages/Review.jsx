@@ -1,14 +1,15 @@
 import { useLocation, Link } from "react-router-dom";
-import { useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
+import { useState, useContext } from "react";
+import { doc, writeBatch, serverTimestamp } from "firebase/firestore";
 import { db } from "../config/firestore";
-import { useUser } from "../hooks/useUser";
+import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { logError } from "../utilities/errorLogger";
 import Anime from "../utilities/Anime";
 import animeConverter from "../utilities/animeConverter";
 import { toast } from "react-toastify";
 
+// TODO Add a spinner for loading reviews, may need to create custom loading component. eh just use loading variable
 export function Review() {
   // SHOULD RETURN A ANIME AND REVIEW OBJECT { anime, review }
   const location = useLocation();
@@ -20,20 +21,22 @@ export function Review() {
   const currentAnime = new Anime(anime);
   const [userReview, setUserReview] = useState(review.openEnded || "");
 
-  const { user } = useUser();
+  const { user, userData } = useContext(AuthContext);
 
   let navigate = useNavigate();
   const handleAddReview = async (e) => {
     e.preventDefault();
 
     try {
-      // prevents the additional write if nothing changed
+      // TODO prevents the additional write if nothing changed
+      // Will need to optimize when reviews are grown out
       if (userReview === review.openEnded) {
         navigate("/myreviews");
         const { error, uiMessage } = logError("No changes were made");
         toast.warn(uiMessage);
         throw error;
       }
+      const batch = writeBatch(db);
 
       // NOTE - terrible error logged here (TypeError: n.indexOf is not a function) means you have an invalid doc reference.
       // YOU MUST USE STRINGS WHEN CREATING A REFERENCE, wish it said that....
@@ -44,18 +47,38 @@ export function Review() {
         "reviews",
         String(currentAnime.animeId),
       );
+      // TODO Look into incrementing a count for totalReviews within animeId
+      const animeReviewsRef = doc(
+        db,
+        "AnimeReviews",
+        String(currentAnime.animeId),
+        "users",
+        user.uid,
+      );
+
+      batch.set(animeReviewsRef, {
+        uid: user.uid,
+        username: userData.username,
+        addedAt: serverTimestamp(),
+      });
+
       // NOTE: I was confused as to why I needed brackets around the
       // review when I assumed the template literals (backticks) would
       // work however this is invalid JS syntax. Using brackets tells the
       // computer to evaluate the template literals
-
-      await setDoc(userRef, {
+      batch.set(userRef, {
         anime: animeConverter.toFirestore(currentAnime),
         review: {
           openEnded: userReview,
         },
       });
-      // user to see that a review was made
+
+      await batch.commit().catch((e) => {
+        const { error, uiMessage } = logError(e);
+        toast.error(uiMessage.message);
+        throw error;
+      });
+
       navigate("/myreviews");
       toast.success("Added Review!");
     } catch (error) {
