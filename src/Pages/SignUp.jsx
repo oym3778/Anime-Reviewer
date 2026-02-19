@@ -12,6 +12,7 @@ import {
   validatePassword,
 } from "firebase/auth";
 
+//TODO Loading spinner isnt displaying, we see unknown user on initial sign up
 export function SignUp() {
   const [username, setUsername] = useState("");
   const [isUsernameAllowed, setIsUsernameAllowed] = useState(true);

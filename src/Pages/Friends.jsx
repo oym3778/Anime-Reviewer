@@ -98,7 +98,7 @@ export function Friends() {
         const responderUID = responderSnap.data()["uid"];
         const requesterUID = user.uid;
 
-        if (friends.includes(responderUID)) {
+        if (friends.has(responderUID)) {
           const { error, uiMessage } = logError(
             `${responderUsername} is already your friend`,
             { responderUID: responderUID },

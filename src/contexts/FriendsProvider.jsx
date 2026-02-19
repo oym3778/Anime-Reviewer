@@ -83,7 +83,6 @@ export function FriendsProvider({ children }) {
     return unsubscribe;
   }, [user]);
 
-  console.log(friends);
   return (
     <FriendsContext.Provider value={friends}>
       {children}

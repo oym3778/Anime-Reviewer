@@ -39,39 +39,39 @@ export function Profile() {
         <Spinner loadingText="Loading Profile..." />
       </div>
     );
-  }
+  } else {
+    return (
+      <div className="flex flex-col justify-center items-center w-auto h-screen bg-green-700">
+        <div className="flex flex-row justify-around items-center w-[80%] h-[60%] bg-green-500 rounded-2xl shadow-xl">
+          <img
+            className="hover:cursor-pointer border-6 border-green-700 rounded-full object-cover w-[350px] h-[350px]"
+            src={userData ? userData.profilePicture : ""}
+            alt="Profile"
+          />
 
-  return (
-    <div className="flex flex-col justify-center items-center w-auto h-screen bg-green-700">
-      <div className="flex flex-row justify-around items-center w-[80%] h-[60%] bg-green-500 rounded-2xl shadow-xl">
-        <img
-          className="hover:cursor-pointer border-6 border-green-700 rounded-full object-cover w-[350px] h-[350px]"
-          src={userData ? userData.profilePicture : ""}
-          alt="Profile"
-        />
-
-        <div className="flex flex-col justify-center w-[50%] gap-6">
-          <h2 className="text-2xl font-bold">
-            {/* The syntax here: instead of checking if userData is null, 
+          <div className="flex flex-col justify-center w-[50%] gap-6">
+            <h2 className="text-2xl font-bold">
+              {/* The syntax here: instead of checking if userData is null, 
             use '?' optional chainging operator to safely return "Unknown User" 
             and ?? is used to provide a default if the left side returns null */}
-            {userData?.username ?? "Unknown user"}
-          </h2>
+              {userData?.username ?? "Unknown user"}
+            </h2>
 
-          <textarea
-            placeholder="Your short bio will appear next to your avatar"
-            className="w-full min-h-[200px] p-4 rounded-xl bg-green-700 text-white placeholder-white/60 outline-none focus:ring-4 focus:ring-green-300 resize-none"
-          />
+            <textarea
+              placeholder="Your short bio will appear next to your avatar"
+              className="w-full min-h-[200px] p-4 rounded-xl bg-green-700 text-white placeholder-white/60 outline-none focus:ring-4 focus:ring-green-300 resize-none"
+            />
+          </div>
         </div>
-      </div>
 
-      <button
-        onClick={handleLogout}
-        className="bg-red-700 mt-4 w-[90%] max-w-[400px] py-3 rounded-xl 
+        <button
+          onClick={handleLogout}
+          className="bg-red-700 mt-4 w-[90%] max-w-[400px] py-3 rounded-xl 
                    text-white font-semibold hover:bg-red-500/90 transition hover:cursor-pointer"
-      >
-        Logout
-      </button>
-    </div>
-  );
+        >
+          Logout
+        </button>
+      </div>
+    );
+  }
 }

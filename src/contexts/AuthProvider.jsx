@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
     // Firebase immediately invokes this callback with the current auth state
     // and again whenever the user logs in or out.
     const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+      setLoading(true);
       setUser(currentUser);
 
       // If no user is logged in, reset user-related state
