@@ -112,8 +112,10 @@ export function MyReviews() {
         );
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
-          const friendIds = snapshot.docs.map((doc) => doc.id);
-
+          const friendIds = snapshot.docs.map((doc) => {
+            const data = [doc.id, doc.data().username];
+            return data;
+          });
           chunkResults[animeId][chunkIndex] = friendIds;
 
           // Recompute merged result from ALL chunks

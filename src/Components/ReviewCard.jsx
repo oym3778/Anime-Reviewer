@@ -75,8 +75,8 @@ export default function ReviewCard({
                 </button>
 
                 {/* Hover Dropdown */}
-                <div className="absolute left-1/2 -translate-x-1/2 mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-out">
-                  <div className="bg-slate-900/95 backdrop-blur-md border border-cyan-400/40  rounded-xl shadow-xl p-4 animate-in fade-in zoom-in-95">
+                <div className="absolute left-1/2-translate-x-1/2 mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-out">
+                  <div className="bg-slate-900/95 backdrop-blur-md border border-cyan-400/40  rounded-xl shadow-xl p-4 animate-in fade-in w-[200px] zoom-in-95">
                     <p className=" text-sm text-cyan-300 font-semibold mb-2">
                       Friend(s) who reviewed:
                     </p>
@@ -91,7 +91,8 @@ export default function ReviewCard({
                                 text-white text-sm
                                 transition"
                           >
-                            {friend}
+                            {/* friend is an array => [UID, Username] */}
+                            {friend[1]}
                           </a>
                         </li>
                       ))}
